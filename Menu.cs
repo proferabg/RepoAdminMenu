@@ -203,6 +203,7 @@ namespace RepoAdminMenu {
             addButton(mainMenu, "Map", () => { navigate(mainMenu, "map"); });
             addButton(mainMenu, "Settings", () => { navigate(mainMenu, "settings"); });
             addButton(mainMenu, "Credits", () => { navigate(mainMenu, "credits"); });
+            addButton(mainMenu, "Report a Bug", () => { Application.OpenURL("https://github.com/proferabg/RepoAdminMenu/issues"); });
 
             openPage(mainMenu, "mainmenu");
         }
