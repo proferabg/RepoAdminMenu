@@ -13,11 +13,13 @@ namespace RepoAdminMenu.Patches {
         [HarmonyPatch("Update")]
         [HarmonyPrefix]
         private static void Update_Prefix(PlayerController __instance, PlayerAvatar ___playerAvatarScript) {
-            if (___playerAvatarScript != null && PlayerUtil.isInfiniteStamina(___playerAvatarScript)) {
-                __instance.EnergyCurrent = __instance.EnergyStart;
-            }
+            if (___playerAvatarScript != null){
+                if (PlayerUtil.isInfiniteStamina(___playerAvatarScript)) {
+                    __instance.EnergyCurrent = __instance.EnergyStart;
+                }
 
-            __instance.DebugNoTumble = PlayerUtil.isNoTumble(___playerAvatarScript);
+                __instance.DebugNoTumble = PlayerUtil.isNoTumble(___playerAvatarScript);
+            }
         }
     }
 }

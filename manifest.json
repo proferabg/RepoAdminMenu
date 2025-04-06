@@ -1,11 +1,11 @@
 {
   "name": "RepoAdminMenu",
-  "version_number": "1.0.1",
+  "version_number": "1.0.2",
   "website_url": "https://github.com/proferabg/RepoAdminMenu",
   "description": "The best admin menu for R.E.P.O.",
   "dependencies": [
     "BepInEx-BepInExPack-5.4.2100",
     "nickklmao-MenuLib-2.2.0",
-    "Zehs-REPOLib-2.0.0"
+    "Zehs-REPOLib-2.0.1"
   ]
 }
