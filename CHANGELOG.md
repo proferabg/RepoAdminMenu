@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.4](https://github.com/proferabg/RepoAdminMenu/releases/tag/1.0.4)
+
+Fix keybind registration loop (#1)
+
+
 ## [1.0.3](https://github.com/proferabg/RepoAdminMenu/releases/tag/1.0.3)
 
 Fix keybind not working (#1)

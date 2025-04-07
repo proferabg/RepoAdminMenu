@@ -4,18 +4,26 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace RepoAdminMenu.Patches {
 
     [HarmonyPatch(typeof(RunManager))]
     internal class RunManagerPatch {
 
-        [HarmonyPatch("Awake")]
+        private static bool lastKeyState = false;
+
+        [HarmonyPatch("Update")]
         [HarmonyPostfix]
-        private static void Awake_Postfix(RunManager __instance) {
-            if(__instance != null) {
-                __instance.gameObject.AddComponent<RepoAdminMenu>();
-                RepoAdminMenu.mls.LogInfo("Registered RepoAdminMenu.Update() with R.E.P.O.");
+        private static void Update_Postfix(RunManager __instance) {
+            if (Configuration.EnableHotkey.Value) {
+                bool currentlyPressed = Input.GetKey(Configuration.MenuHotkey.Value);
+                if (!lastKeyState && currentlyPressed) {
+                    Menu.toggleMenu();
+                    lastKeyState = currentlyPressed;
+                } else if (lastKeyState && !currentlyPressed) {
+                    lastKeyState = currentlyPressed;
+                }
             }
         }
 
