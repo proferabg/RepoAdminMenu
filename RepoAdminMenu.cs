@@ -13,13 +13,15 @@ namespace RepoAdminMenu {
 
         private const string mod_guid = "proferabg.REPO.RepoAdminMenu";
         private const string mod_name = "Repo Admin Menu";
-        private const string mod_version = "1.0.2";
+        private const string mod_version = "1.0.3";
 
         private static RepoAdminMenu _plugin;
 
         public static Harmony harmony = new Harmony(mod_guid);
 
         public static ManualLogSource mls;
+
+        private static bool lastKeyState = false;
 
         public void Awake() {
             // Plugin startup logic
@@ -32,12 +34,18 @@ namespace RepoAdminMenu {
 
             harmony.PatchAll();
 
-            mls.LogInfo("R.A.M. has been allocated!");
+            mls.LogInfo($"R.A.M. ({mod_version}) has been allocated!");
         }
 
         public void Update() {
-            if (Configuration.EnableHotkey.Value && Input.GetKeyDown(Configuration.MenuHotkey.Value)) {
-                Menu.toggleMenu();
+            if (Configuration.EnableHotkey.Value) {
+                bool currentlyPressed = Input.GetKey(Configuration.MenuHotkey.Value);
+                if (!lastKeyState && currentlyPressed) {
+                    Menu.toggleMenu();
+                    lastKeyState = currentlyPressed;
+                } else if (lastKeyState && !currentlyPressed) {
+                    lastKeyState = currentlyPressed;
+                }
             }
         }
 

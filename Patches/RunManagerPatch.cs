@@ -10,6 +10,15 @@ namespace RepoAdminMenu.Patches {
     [HarmonyPatch(typeof(RunManager))]
     internal class RunManagerPatch {
 
+        [HarmonyPatch("Awake")]
+        [HarmonyPostfix]
+        private static void Awake_Postfix(RunManager __instance) {
+            if(__instance != null) {
+                __instance.gameObject.AddComponent<RepoAdminMenu>();
+                RepoAdminMenu.mls.LogInfo("Registered RepoAdminMenu.Update() with R.E.P.O.");
+            }
+        }
+
         [HarmonyPatch("ChangeLevel")]
         [HarmonyPostfix]
         private static void ChangeLevel_Postfix() {

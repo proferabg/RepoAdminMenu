@@ -1,0 +1,20 @@
+# Changelog
+
+## [1.0.3](https://github.com/proferabg/RepoAdminMenu/releases/tag/1.0.3)
+
+Fix keybind not working (#1)
+
+
+## [1.0.2](https://github.com/proferabg/RepoAdminMenu/releases/tag/1.0.2)
+
+Bug fix
+
+
+## [1.0.1](https://github.com/proferabg/RepoAdminMenu/releases/tag/1.0.1)
+
+Add bug reporting
+
+
+## [1.0.0](https://github.com/proferabg/RepoAdminMenu/releases/tag/1.0.0)
+
+Initial Release
