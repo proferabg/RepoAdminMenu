@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.5](https://github.com/proferabg/RepoAdminMenu/releases/tag/1.0.5)
+
+Added player teleportation
+Added player force tumble
+Set player upgrade slider max value to 25 (configurable)
+
+
 ## [1.0.4](https://github.com/proferabg/RepoAdminMenu/releases/tag/1.0.4)
 
 Fix keybind registration loop (#1)

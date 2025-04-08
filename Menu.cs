@@ -234,10 +234,13 @@ namespace RepoAdminMenu {
             addToggle(playerMenu, "No Target", (b) => { PlayerUtil.toggleNoTarget(b, avatar); }, "Off", "On", !PlayerUtil.isNoTarget(avatar));
             addToggle(playerMenu, "No Tumble", (b) => { PlayerUtil.toggleNoTumble(b, avatar); }, "Off", "On", !PlayerUtil.isNoTumble(avatar));
             addToggle(playerMenu, "Infinite Stamina", (b) => { PlayerUtil.toggleInfiniteStamina(b, avatar); }, "Off", "On", !PlayerUtil.isInfiniteStamina(avatar));
+            addToggle(playerMenu, "Force Tumble", (b) => { PlayerUtil.toggleForceTumble(b, avatar); }, "Off", "On", !PlayerUtil.isForceTumble(avatar));
             addButton(playerMenu, "Upgrades", () => { navigate(playerMenu, "playerUpgrade"); });
             addButton(playerMenu, "Heal", () => { PlayerUtil.healPlayer(avatar); });
             addButton(playerMenu, "Kill", () => { PlayerUtil.killPlayer(avatar); });
             addButton(playerMenu, "Revive", () => { PlayerUtil.revivePlayer(avatar); });
+            addButton(playerMenu, "Teleport To", () => { PlayerUtil.teleportTo(avatar); });
+            addButton(playerMenu, "Summon", () => { PlayerUtil.summon(avatar); });
             addButton(playerMenu, "Give Crown", () => { PlayerUtil.giveCrown(avatar); });
 
             openPage(playerMenu, "player");
@@ -254,15 +257,15 @@ namespace RepoAdminMenu {
 
             var upgradesMenu = createMenu("R.A.M. - " + SemiFunc.PlayerGetName(avatar) + " - Upgrades", "playerUpgrade", "player");
 
-            addIntSlider(upgradesMenu, "Health", "", (v) => { PlayerUtil.upgrade("health", avatar, v); }, 0, 9999, PlayerUtil.getUpgradeLevel("health", avatar));
-            addIntSlider(upgradesMenu, "Jump", "", (v) => { PlayerUtil.upgrade("jump", avatar, v); }, 0, 9999, PlayerUtil.getUpgradeLevel("jump", avatar));
-            addIntSlider(upgradesMenu, "Launch", "", (v) => { PlayerUtil.upgrade("launch", avatar, v); }, 0, 9999, PlayerUtil.getUpgradeLevel("launch", avatar));
-            addIntSlider(upgradesMenu, "Map Player Count", "", (v) => { PlayerUtil.upgrade("playercount", avatar, v); }, 0, 9999, PlayerUtil.getUpgradeLevel("playercount", avatar));
-            addIntSlider(upgradesMenu, "Range", "", (v) => { PlayerUtil.upgrade("range", avatar, v); }, 0, 9999, PlayerUtil.getUpgradeLevel("range", avatar));
-            addIntSlider(upgradesMenu, "Speed", "", (v) => { PlayerUtil.upgrade("speed", avatar, v); }, 0, 9999, PlayerUtil.getUpgradeLevel("speed", avatar));
-            addIntSlider(upgradesMenu, "Stamina", "", (v) => { PlayerUtil.upgrade("stamina", avatar, v); }, 0, 9999, PlayerUtil.getUpgradeLevel("stamina", avatar));
-            addIntSlider(upgradesMenu, "Strength", "", (v) => { PlayerUtil.upgrade("strength", avatar, v); }, 0, 9999, PlayerUtil.getUpgradeLevel("strength", avatar));
-            addIntSlider(upgradesMenu, "Throw", "", (v) => { PlayerUtil.upgrade("throw", avatar, v); }, 0, 9999, PlayerUtil.getUpgradeLevel("throw", avatar));
+            addIntSlider(upgradesMenu, "Health", "", (v) => { PlayerUtil.upgrade("health", avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("health", avatar));
+            addIntSlider(upgradesMenu, "Jump", "", (v) => { PlayerUtil.upgrade("jump", avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("jump", avatar));
+            addIntSlider(upgradesMenu, "Launch", "", (v) => { PlayerUtil.upgrade("launch", avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("launch", avatar));
+            addIntSlider(upgradesMenu, "Map Player Count", "", (v) => { PlayerUtil.upgrade("playercount", avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playercount", avatar));
+            addIntSlider(upgradesMenu, "Range", "", (v) => { PlayerUtil.upgrade("range", avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("range", avatar));
+            addIntSlider(upgradesMenu, "Speed", "", (v) => { PlayerUtil.upgrade("speed", avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("speed", avatar));
+            addIntSlider(upgradesMenu, "Stamina", "", (v) => { PlayerUtil.upgrade("stamina", avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("stamina", avatar));
+            addIntSlider(upgradesMenu, "Strength", "", (v) => { PlayerUtil.upgrade("strength", avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("strength", avatar));
+            addIntSlider(upgradesMenu, "Throw", "", (v) => { PlayerUtil.upgrade("throw", avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("throw", avatar));
 
             openPage(upgradesMenu, "playerUpgrade");
         }

@@ -10,6 +10,8 @@ namespace RepoAdminMenu {
 
         public static ConfigEntry<KeyCode> MenuHotkey { get; private set; }
 
+        public static ConfigEntry<int> MaxUpgradeLevel { get; private set; }
+
         public static void Init(ConfigFile config) {
             EnableCommands = config.Bind<bool>(
                 "General",
@@ -30,6 +32,13 @@ namespace RepoAdminMenu {
                 "MenuHotkey",
                 KeyCode.F8,
                 "Key to open or close the menu"
+            );
+
+            MaxUpgradeLevel = config.Bind<int>(
+                "General",
+                "MaxUpgrade",
+                25,
+                "Changes the slider max value for player upgrades"
             );
 
         }

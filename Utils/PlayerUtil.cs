@@ -1,9 +1,9 @@
 ﻿using HarmonyLib;
 using Photon.Pun;
-using System;
+using REPOLib.Extensions;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
+using UnityEngine;
 
 namespace RepoAdminMenu.Utils {
     internal class PlayerUtil {
@@ -17,6 +17,8 @@ namespace RepoAdminMenu.Utils {
         private static List<string> noTargetPlayers = new List<string>();
 
         private static List<string> noTumblePlayers = new List<string>();
+
+        private static Dictionary<string, long> forcedTumble = new Dictionary<string, long>();
 
         public static bool isGod(PlayerAvatar avatar) {
             return godModePlayers.Contains(SemiFunc.PlayerGetSteamID(avatar));
@@ -36,6 +38,17 @@ namespace RepoAdminMenu.Utils {
 
         public static bool isNoTumble(PlayerAvatar avatar) {
             return noTumblePlayers.Contains(SemiFunc.PlayerGetSteamID(avatar));
+        }
+
+        public static bool isForceTumble(PlayerAvatar avatar) {
+            return forcedTumble.ContainsKey(SemiFunc.PlayerGetSteamID(avatar));
+        }
+        internal static long getLastForceTumble(PlayerAvatar avatar) {
+            return forcedTumble.GetValueOrDefault(SemiFunc.PlayerGetSteamID(avatar), 0);
+        }
+
+        internal static long setLastForceTumble(PlayerAvatar avatar, long lastTumble) {
+            return forcedTumble[SemiFunc.PlayerGetSteamID(avatar)] = lastTumble;
         }
 
         public static void toggleGodMode(bool b, PlayerAvatar avatar) {
@@ -76,6 +89,14 @@ namespace RepoAdminMenu.Utils {
             else
                 noTumblePlayers.Add(SemiFunc.PlayerGetSteamID(avatar));
             RepoAdminMenu.mls.LogInfo(SemiFunc.PlayerGetName(avatar) + " - No Tumble - " + !b);
+        }
+
+        public static void toggleForceTumble(bool b, PlayerAvatar avatar) {
+            if (b)
+                forcedTumble.Remove(SemiFunc.PlayerGetSteamID(avatar));
+            else
+                forcedTumble.Add(SemiFunc.PlayerGetSteamID(avatar), 0);
+            RepoAdminMenu.mls.LogInfo(SemiFunc.PlayerGetName(avatar) + " - Force Tumble - " + !b);
         }
 
         public static void killPlayer(PlayerAvatar avatar) {
@@ -261,6 +282,42 @@ namespace RepoAdminMenu.Utils {
         public static void giveCrown(PlayerAvatar avatar) {
             SessionManager.instance.crownedPlayerSteamID = SemiFunc.PlayerGetSteamID(avatar);
             SessionManager.instance.CrownPlayer();
+        }
+
+        public static void teleportTo(PlayerAvatar avatar) {
+            teleport(PlayerAvatar.instance, avatar);
+        }
+
+        public static void summon(PlayerAvatar avatar) {
+            teleport(avatar, PlayerAvatar.instance);
+        }
+
+        private static void teleport(PlayerAvatar from, PlayerAvatar to) {
+            Vector3 pos = to.transform.position;
+            Quaternion rot = to.transform.rotation;
+            if (to.deadSet) {
+                pos = to.playerDeathHead.physGrabObject.transform.position;
+                rot = to.playerDeathHead.physGrabObject.transform.rotation;
+            }
+            if (!SemiFunc.IsMultiplayer()) {
+                from.Spawn(pos, rot);
+            } else if (from.photonView != null){
+                if (from.deadSet) {
+                    from.playerDeathHead.physGrabObject.Teleport(pos, rot);
+                } else {
+                    from.photonView.RPC("SpawnRPC", RpcTarget.All, new object[] { pos, rot });
+                }
+            }
+
+            /*
+            from.transform.position = to.transform.position;
+            from.clientPosition = to.transform.position;
+            from.clientPositionCurrent = to.transform.position;
+            from.playerAvatarVisuals.transform.position = to.transform.position;
+            from.playerAvatarVisuals.visualPosition = to.transform.position;
+            if (from.photonView.IsMine) { 
+                from.playerTransform.transform.position = to.transform.position;
+            }*/
         }
     }
 }
