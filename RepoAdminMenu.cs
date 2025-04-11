@@ -1,8 +1,7 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
-using UnityEngine;
-using RepoAdminMenu.Patches;
+using RepoAdminMenu.Utils;
 
 namespace RepoAdminMenu {
 
@@ -13,7 +12,7 @@ namespace RepoAdminMenu {
 
         private const string mod_guid = "proferabg.REPO.RepoAdminMenu";
         private const string mod_name = "Repo Admin Menu";
-        private const string mod_version = "1.0.5";
+        private const string mod_version = "1.0.6";
 
         private static RepoAdminMenu _plugin;
 
@@ -29,6 +28,7 @@ namespace RepoAdminMenu {
             mls = BepInEx.Logging.Logger.CreateLogSource(mod_name);
 
             Configuration.Init(Config);
+            Settings.Init();
 
             harmony.PatchAll();
 

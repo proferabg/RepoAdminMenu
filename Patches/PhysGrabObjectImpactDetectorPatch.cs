@@ -9,7 +9,7 @@ namespace RepoAdminMenu.Patches {
         [HarmonyPatch("Break")]
         [HarmonyPrefix]
         private static bool Break_Prefix(bool ___isEnemy) {
-            return (!Settings.noBreak || ___isEnemy);
+            return (!Settings.instance.noBreak || ___isEnemy);
         }
 
     }

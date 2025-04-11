@@ -1,9 +1,5 @@
 ﻿using HarmonyLib;
 using Photon.Pun;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
 
 namespace RepoAdminMenu.Patches {
 
@@ -13,7 +9,7 @@ namespace RepoAdminMenu.Patches {
         [HarmonyPatch("OnHit")]
         [HarmonyPrefix]
         private static bool OnHit_Prefix(ItemMeleeInflatableHammer __instance, PhotonView ___photonView) {
-            if (Settings.boomhammer) {
+            if (Settings.instance.boomhammer) {
                 if (SemiFunc.IsMasterClientOrSingleplayer()) {
                     __instance.ExplosionRPC();
                     return false;

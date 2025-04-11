@@ -12,6 +12,8 @@ namespace RepoAdminMenu {
 
         public static ConfigEntry<int> MaxUpgradeLevel { get; private set; }
 
+        public static ConfigEntry<bool> ResetSettingsOnLobbyCreation { get; private set; }
+
         public static void Init(ConfigFile config) {
             EnableCommands = config.Bind<bool>(
                 "General",
@@ -39,6 +41,13 @@ namespace RepoAdminMenu {
                 "MaxUpgrade",
                 25,
                 "Changes the slider max value for player upgrades"
+            );
+
+            ResetSettingsOnLobbyCreation = config.Bind<bool>(
+                "General",
+                "ResetSettingsOnLobbyCreation",
+                true,
+                "Should menu settings and player toggles reset on new lobby creation"
             );
 
         }

@@ -1,7 +1,4 @@
 ﻿using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace RepoAdminMenu.Patches {
 
@@ -12,7 +9,7 @@ namespace RepoAdminMenu.Patches {
         [HarmonyPatch("Update")]
         [HarmonyPrefix]
         private static void Update_Prefix(ref bool ___trapStart, ref bool ___trapActive) {
-            if (Settings.noTraps) {
+            if (Settings.instance.noTraps) {
                 ___trapActive = false;
                 ___trapStart = false;
             }

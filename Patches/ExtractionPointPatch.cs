@@ -11,7 +11,7 @@ namespace RepoAdminMenu.Patches {
         [HarmonyPrefix]
         private static void Update_Prefix(ExtractionPoint __instance, bool ___isShop) {
             if (___isShop) {
-                if (Settings.infiniteMoney) {
+                if (Settings.instance.infiniteMoney) {
                     if (previousMoney < 0) {
                         previousMoney = StatsManager.instance.runStats["currency"];
                     }

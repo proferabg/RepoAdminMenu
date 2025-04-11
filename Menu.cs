@@ -5,7 +5,6 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
-using System.Xml.Linq;
 using RepoAdminMenu.Utils;
 
 namespace RepoAdminMenu {
@@ -21,8 +20,8 @@ namespace RepoAdminMenu {
 
         private static MethodInfo removeAllPagesMethod = AccessTools.Method(typeof(MenuManager), "PageCloseAll");
 
-        private static Dictionary<string, Action<string, REPOPopupPage>> menuPreCallbacks = new Dictionary<string, Action<string, REPOPopupPage>>();
-        private static Dictionary<string, Action<string, REPOPopupPage>> menuPostCallbacks = new Dictionary<string, Action<string, REPOPopupPage>>();
+        private static Dictionary<string, System.Action<string, REPOPopupPage>> menuPreCallbacks = new Dictionary<string, System.Action<string, REPOPopupPage>>();
+        private static Dictionary<string, System.Action<string, REPOPopupPage>> menuPostCallbacks = new Dictionary<string, System.Action<string, REPOPopupPage>>();
 
         public static void Init() {
             registerMenu("playerList", openPlayerListMenu);
@@ -50,7 +49,7 @@ namespace RepoAdminMenu {
             menus.Add(name, openAction);
         }
 
-        public static void addMenuPreCallback(string mod_name, Action<string, REPOPopupPage> action) {
+        public static void addMenuPreCallback(string mod_name, System.Action<string, REPOPopupPage> action) {
             menuPreCallbacks.Add(mod_name, action);
         }
 
@@ -58,7 +57,7 @@ namespace RepoAdminMenu {
             menuPreCallbacks.Remove(mod_name);
         }
 
-        public static void addMenuPostCallback(string mod_name, Action<string, REPOPopupPage> action) {
+        public static void addMenuPostCallback(string mod_name, System.Action<string, REPOPopupPage> action) {
             menuPostCallbacks.Add(mod_name, action);
         }
 
@@ -104,14 +103,13 @@ namespace RepoAdminMenu {
         }
 
         public static void openPage(REPOPopupPage page, string name) {
-            MenuManager.instance.StartCoroutine(openPageInternal(page, name)); 
-            
+            MenuManager.instance.StartCoroutine(openPageInternal(page, name));
         }
 
 
         private static System.Collections.IEnumerator openPageInternal(REPOPopupPage page, string name) {
             yield return new WaitForSeconds(0.050f);
-            foreach (KeyValuePair<string, Action<string, REPOPopupPage>> entry in menuPostCallbacks) {
+            foreach (KeyValuePair<string, System.Action<string, REPOPopupPage>> entry in menuPostCallbacks) {
                 RepoAdminMenu.mls.LogInfo("Running post-callback for '" + entry.Key + "' on menu '" + name + "'");
                 entry.Value.Invoke(name, page);
             }
@@ -124,7 +122,7 @@ namespace RepoAdminMenu {
 
         public static REPOPopupPage createMenu(string title, string currentMenu, string parentMenu) {
             var elem = MenuAPI.CreateREPOPopupPage(title, REPOPopupPage.PresetSide.Left, false, true);
-            foreach (KeyValuePair<string, Action<string, REPOPopupPage>> entry in menuPreCallbacks) {
+            foreach (KeyValuePair<string, System.Action<string, REPOPopupPage>> entry in menuPreCallbacks) {
                 RepoAdminMenu.mls.LogInfo("Running pre-callback for '" + entry.Key + "' on menu '" + currentMenu + "'");
                 entry.Value.Invoke(currentMenu, elem);
             }
@@ -134,7 +132,7 @@ namespace RepoAdminMenu {
 
         public static REPOPopupPage createMainMenu(string title) {
             var elem = MenuAPI.CreateREPOPopupPage(title, REPOPopupPage.PresetSide.Left, false, true);
-            foreach (KeyValuePair<string, Action<string, REPOPopupPage>> entry in menuPreCallbacks) {
+            foreach (KeyValuePair<string, System.Action<string, REPOPopupPage>> entry in menuPreCallbacks) {
                 RepoAdminMenu.mls.LogInfo("Running pre-callback for '" + entry.Key + "' on menu 'mainmenu'");
                 entry.Value.Invoke("mainmenu", elem);
             }
@@ -219,7 +217,7 @@ namespace RepoAdminMenu {
         }
 
         private static void openPlayerMenu() {
-            if (selectedPlayerId == null) {
+            if (selectedPlayerId == null || SemiFunc.PlayerGetFromSteamID(selectedPlayerId) == null) {
                 RepoAdminMenu.mls.LogInfo("No player selected");
                 openPlayerListMenu();
                 return;
@@ -229,12 +227,12 @@ namespace RepoAdminMenu {
 
             var playerMenu = createMenu("R.A.M. - " + SemiFunc.PlayerGetName(avatar), "player", "playerList");
 
-            addToggle(playerMenu, "God Mode", (b) => { PlayerUtil.toggleGodMode(b, avatar); }, "Off", "On", !PlayerUtil.isGod(avatar));
-            addToggle(playerMenu, "No Death", (b) => { PlayerUtil.toggleNoDeath(b, avatar); }, "Off", "On", !PlayerUtil.isNoDeath(avatar));
-            addToggle(playerMenu, "No Target", (b) => { PlayerUtil.toggleNoTarget(b, avatar); }, "Off", "On", !PlayerUtil.isNoTarget(avatar));
-            addToggle(playerMenu, "No Tumble", (b) => { PlayerUtil.toggleNoTumble(b, avatar); }, "Off", "On", !PlayerUtil.isNoTumble(avatar));
-            addToggle(playerMenu, "Infinite Stamina", (b) => { PlayerUtil.toggleInfiniteStamina(b, avatar); }, "Off", "On", !PlayerUtil.isInfiniteStamina(avatar));
-            addToggle(playerMenu, "Force Tumble", (b) => { PlayerUtil.toggleForceTumble(b, avatar); }, "Off", "On", !PlayerUtil.isForceTumble(avatar));
+            addToggle(playerMenu, "God Mode", (b) => { Settings.toggle(Settings.instance.godModePlayers, avatar.steamID, b); }, "Off", "On", !Settings.isGod(avatar));
+            addToggle(playerMenu, "No Death", (b) => { Settings.toggle(Settings.instance.noDeathPlayers, avatar.steamID, b); }, "Off", "On", !Settings.isNoDeath(avatar));
+            addToggle(playerMenu, "No Target", (b) => { Settings.toggle(Settings.instance.noTargetPlayers, avatar.steamID, b); }, "Off", "On", !Settings.isNoTarget(avatar));
+            addToggle(playerMenu, "No Tumble", (b) => { Settings.toggle(Settings.instance.noTumblePlayers, avatar.steamID, b); }, "Off", "On", !Settings.isNoTumble(avatar));
+            addToggle(playerMenu, "Infinite Stamina", (b) => { Settings.toggle(Settings.instance.infiniteStaminaPlayers, avatar.steamID, b); }, "Off", "On", !Settings.isInfiniteStamina(avatar));
+            addToggle(playerMenu, "Force Tumble", (b) => { Settings.toggleDictLong(Settings.instance.forcedTumble, avatar.steamID, b); }, "Off", "On", !Settings.isForceTumble(avatar));
             addButton(playerMenu, "Upgrades", () => { navigate(playerMenu, "playerUpgrade"); });
             addButton(playerMenu, "Heal", () => { PlayerUtil.healPlayer(avatar); });
             addButton(playerMenu, "Kill", () => { PlayerUtil.killPlayer(avatar); });
@@ -242,12 +240,19 @@ namespace RepoAdminMenu {
             addButton(playerMenu, "Teleport To", () => { PlayerUtil.teleportTo(avatar); });
             addButton(playerMenu, "Summon", () => { PlayerUtil.summon(avatar); });
             addButton(playerMenu, "Give Crown", () => { PlayerUtil.giveCrown(avatar); });
+            addButton(playerMenu, "Kick Player", () => {
+                closePage(playerMenu);
+                openConfirmMenu("player", "Kick: " + SemiFunc.PlayerGetName(avatar), new Dictionary<string, System.Action> {
+                    {"Yes", () => { PlayerUtil.KickPlayer(avatar); }},
+                    {"No", null}
+                });
+            });
 
             openPage(playerMenu, "player");
         }
 
         private static void openPlayerUpgrades() {
-            if (selectedPlayerId == null) {
+            if (selectedPlayerId == null || SemiFunc.PlayerGetFromSteamID(selectedPlayerId) == null) {
                 RepoAdminMenu.mls.LogInfo("No player selected");
                 openPlayerListMenu();
                 return;
@@ -396,7 +401,8 @@ namespace RepoAdminMenu {
                 addToggle(mapMenu, entry.Key, (b) => { MapUtil.setMapEnabled(entry.Value, !b); }, "Off", "On", !MapUtil.isMapEnabled(entry.Value));
             }
 
-            addButton(mapMenu, "Level Selector", () => { navigate(mapMenu, "levelSelector"); });
+            addIntSlider(mapMenu, "Current Level", "", (v) => { RunManager.instance.levelsCompleted = v; }, 1, 500, RunManager.instance.levelsCompleted);
+            addButton(mapMenu, "Map Selector", () => { navigate(mapMenu, "levelSelector"); });
             addButton(mapMenu, "Discover Extraction Point", ExtractionPointUtil.discoverNext);
             addButton(mapMenu, "Complete Extraction Point", ExtractionPointUtil.complete);
 
@@ -404,7 +410,7 @@ namespace RepoAdminMenu {
         }
 
         private static void openLevelSelectorMenu() {
-            var mapMenu = createMenu("R.A.M. - Level Selector", "levelSelector", "map");
+            var mapMenu = createMenu("R.A.M. - Map Selector", "levelSelector", "map");
 
             foreach (KeyValuePair<string, Level> entry in MapUtil.getMaps()) {
                 addButton(mapMenu, entry.Key, () => { MapUtil.changeLevel(entry.Value); });
@@ -419,17 +425,16 @@ namespace RepoAdminMenu {
         private static void openSettingsMenu() {
             var settingsMenu = createMenu("R.A.M. - Settings", "settings", "mainmenu");
 
-            addIntSlider(settingsMenu, "Level", "", (v) => { RunManager.instance.levelsCompleted = v; }, 1, 9999, RunManager.instance.levelsCompleted);
-            addToggle(settingsMenu, "Infinite Money", (b) => { Settings.infiniteMoney = !b; }, "Off", "On", !Settings.infiniteMoney);
-            addToggle(settingsMenu, "No Break", (b) => { Settings.noBreak = !b; }, "Off", "On", !Settings.noBreak);
-            addToggle(settingsMenu, "No Battery/Ammo Drain", (b) => { Settings.noBatteryDrain = !b; }, "Off", "On", !Settings.noBatteryDrain);
-            addToggle(settingsMenu, "No Traps", (b) => { Settings.noTraps = !b; }, "Off", "On", !Settings.noTraps);
-            addToggle(settingsMenu, "Weak Enemies", (b) => { Settings.weakEnemies = !b; }, "Off", "On", !Settings.weakEnemies);
-            addToggle(settingsMenu, "Deaf Enemies", (b) => { Settings.deafEnemies = !b; }, "Off", "On", !Settings.deafEnemies);
-            addToggle(settingsMenu, "Blind Enemies", (b) => { Settings.blindEnemies = !b; }, "Off", "On", !Settings.blindEnemies);
-            addToggle(settingsMenu, "Boom Hammer", (b) => { Settings.boomhammer = !b; }, "Off", "On", !Settings.boomhammer);
-            addToggle(settingsMenu, "Friendly Duck", (b) => { Settings.friendlyDuck = !b; }, "Off", "On", !Settings.friendlyDuck);
-            addToggle(settingsMenu, "Upgrade In Shop", (b) => { Settings.useShopUpgrades = !b; }, "Off", "On", !Settings.useShopUpgrades);
+            addToggle(settingsMenu, "Infinite Money", (b) => { Settings.instance.infiniteMoney = !b; Settings.UpdateClients(); }, "Off", "On", !Settings.instance.infiniteMoney);
+            addToggle(settingsMenu, "No Break", (b) => { Settings.instance.noBreak = !b; Settings.UpdateClients(); }, "Off", "On", !Settings.instance.noBreak);
+            addToggle(settingsMenu, "No Battery/Ammo Drain", (b) => { Settings.instance.noBatteryDrain = !b; Settings.UpdateClients(); }, "Off", "On", !Settings.instance.noBatteryDrain);
+            addToggle(settingsMenu, "No Traps", (b) => { Settings.instance.noTraps = !b; Settings.UpdateClients(); }, "Off", "On", !Settings.instance.noTraps);
+            addToggle(settingsMenu, "Weak Enemies", (b) => { Settings.instance.weakEnemies = !b; Settings.UpdateClients(); }, "Off", "On", !Settings.instance.weakEnemies);
+            addToggle(settingsMenu, "Deaf Enemies", (b) => { Settings.instance.deafEnemies = !b; Settings.UpdateClients(); }, "Off", "On", !Settings.instance.deafEnemies);
+            addToggle(settingsMenu, "Blind Enemies", (b) => { Settings.instance.blindEnemies = !b; Settings.UpdateClients(); }, "Off", "On", !Settings.instance.blindEnemies);
+            addToggle(settingsMenu, "Boom Hammer", (b) => { Settings.instance.boomhammer = !b; Settings.UpdateClients(); }, "Off", "On", !Settings.instance.boomhammer);
+            addToggle(settingsMenu, "Friendly Duck", (b) => { Settings.instance.friendlyDuck = !b; Settings.UpdateClients(); }, "Off", "On", !Settings.instance.friendlyDuck);
+            addToggle(settingsMenu, "Upgrade In Shop", (b) => { Settings.instance.useShopUpgrades = !b; Settings.UpdateClients(); }, "Off", "On", !Settings.instance.useShopUpgrades);
 
             openPage(settingsMenu, "settings");
         }
@@ -449,6 +454,19 @@ namespace RepoAdminMenu {
             addLabel(creditsMenu, "Repo Admin Menu © 2025");
 
             openPage(creditsMenu, "credits");
+        }
+
+        private static void openConfirmMenu(string currentMenu, string message, Dictionary<string, System.Action> options) {
+            var confirmMenu = createMenu("R.A.M. - Confirm", "confirm", "player");
+            confirmMenu.closeMenuOnEscape = false;
+
+            addLabel(confirmMenu, message);
+            addLabel(confirmMenu, "");
+            foreach (KeyValuePair<string, System.Action> option in options) {
+                addButton(confirmMenu, option.Key, () => { if(option.Value != null) option.Value.Invoke(); navigate(confirmMenu, currentMenu); });
+            }
+
+            openPage(confirmMenu, "confirm");
         }
 
         public static string getSelectedPlayer() {

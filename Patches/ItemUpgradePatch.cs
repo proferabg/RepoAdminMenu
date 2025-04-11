@@ -1,7 +1,4 @@
 ﻿using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace RepoAdminMenu.Patches {
 
@@ -11,7 +8,7 @@ namespace RepoAdminMenu.Patches {
         [HarmonyPatch("Update")]
         [HarmonyPrefix]
         private static void Update_Prefix(ItemToggle ___itemToggle) {
-            if (Settings.useShopUpgrades) {
+            if (Settings.instance.useShopUpgrades) {
                 ___itemToggle.enabled = true;
             }
 

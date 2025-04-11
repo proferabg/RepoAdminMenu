@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using RepoAdminMenu.Utils;
 using System;
 
 namespace RepoAdminMenu.Patches {
@@ -10,11 +9,11 @@ namespace RepoAdminMenu.Patches {
         [HarmonyPatch("Update")]
         [HarmonyPrefix]
         private static void Update_Prefix(PlayerTumble __instance, PlayerAvatar ___playerAvatar) {
-            if (__instance != null && PlayerUtil.isForceTumble(___playerAvatar)) {
+            if (__instance != null && ___playerAvatar != null && Settings.isForceTumble(___playerAvatar) && SemiFunc.IsMasterClient()) {
                 long currentMillis = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
-                if (PlayerUtil.getLastForceTumble(___playerAvatar) < (currentMillis - 500)) {
+                if (Settings.getLastForceTumble(___playerAvatar) < (currentMillis - 500)) {
                     __instance.TumbleRequest(true, false);
-                    PlayerUtil.setLastForceTumble(___playerAvatar, currentMillis);
+                    Settings.setLastForceTumble(___playerAvatar, currentMillis);
                 }
             }
         }

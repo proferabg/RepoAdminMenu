@@ -8,7 +8,7 @@ namespace RepoAdminMenu.Patches {
         [HarmonyPatch("Update")]
         [HarmonyPostfix]
         private static void Update_Postfix(ItemBattery __instance, ref int ___batteryLifeInt) {
-            if (Settings.noBatteryDrain) {
+            if (Settings.instance.noBatteryDrain) {
                 __instance.batteryLife = 100f;
                 ___batteryLifeInt = 6;
             }

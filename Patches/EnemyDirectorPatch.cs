@@ -1,7 +1,4 @@
 ﻿using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace RepoAdminMenu.Patches {
 
@@ -12,7 +9,7 @@ namespace RepoAdminMenu.Patches {
         [HarmonyPatch("SetInvestigate")]
         [HarmonyPrefix]
         private static bool SetInvestigate_Prefix(EnemyDirector __instance) {
-            return Settings.deafEnemies;
+            return Settings.instance.deafEnemies;
         }
 
     }

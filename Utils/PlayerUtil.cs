@@ -1,103 +1,15 @@
-﻿using HarmonyLib;
+﻿using ExitGames.Client.Photon;
+using HarmonyLib;
 using Photon.Pun;
+using Photon.Realtime;
 using REPOLib.Extensions;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
 namespace RepoAdminMenu.Utils {
     internal class PlayerUtil {
-
-        private static List<string> godModePlayers = new List<string>();
-
-        private static List<string> noDeathPlayers = new List<string>();
-
-        private static List<string> infiniteStaminaPlayers = new List<string>();
-
-        private static List<string> noTargetPlayers = new List<string>();
-
-        private static List<string> noTumblePlayers = new List<string>();
-
-        private static Dictionary<string, long> forcedTumble = new Dictionary<string, long>();
-
-        public static bool isGod(PlayerAvatar avatar) {
-            return godModePlayers.Contains(SemiFunc.PlayerGetSteamID(avatar));
-        }
-
-        public static bool isNoDeath(PlayerAvatar avatar) {
-            return noDeathPlayers.Contains(SemiFunc.PlayerGetSteamID(avatar));
-        }
-
-        public static bool isInfiniteStamina(PlayerAvatar avatar) {
-            return infiniteStaminaPlayers.Contains(SemiFunc.PlayerGetSteamID(avatar));
-        }
-
-        public static bool isNoTarget(PlayerAvatar avatar) {
-            return noTargetPlayers.Contains(SemiFunc.PlayerGetSteamID(avatar));
-        }
-
-        public static bool isNoTumble(PlayerAvatar avatar) {
-            return noTumblePlayers.Contains(SemiFunc.PlayerGetSteamID(avatar));
-        }
-
-        public static bool isForceTumble(PlayerAvatar avatar) {
-            return forcedTumble.ContainsKey(SemiFunc.PlayerGetSteamID(avatar));
-        }
-        internal static long getLastForceTumble(PlayerAvatar avatar) {
-            return forcedTumble.GetValueOrDefault(SemiFunc.PlayerGetSteamID(avatar), 0);
-        }
-
-        internal static long setLastForceTumble(PlayerAvatar avatar, long lastTumble) {
-            return forcedTumble[SemiFunc.PlayerGetSteamID(avatar)] = lastTumble;
-        }
-
-        public static void toggleGodMode(bool b, PlayerAvatar avatar) {
-            if (b)
-                godModePlayers.Remove(SemiFunc.PlayerGetSteamID(avatar));
-            else
-                godModePlayers.Add(SemiFunc.PlayerGetSteamID(avatar));
-            RepoAdminMenu.mls.LogInfo(SemiFunc.PlayerGetName(avatar) + " - God Mode - " + !b);
-        }
-
-        public static void toggleNoDeath(bool b, PlayerAvatar avatar) {
-            if (b)
-                noDeathPlayers.Remove(SemiFunc.PlayerGetSteamID(avatar));
-            else
-                noDeathPlayers.Add(SemiFunc.PlayerGetSteamID(avatar));
-            RepoAdminMenu.mls.LogInfo(SemiFunc.PlayerGetName(avatar) + " - No Death - " + !b);
-        }
-
-        public static void toggleInfiniteStamina(bool b, PlayerAvatar avatar) {
-            if (b)
-                infiniteStaminaPlayers.Remove(SemiFunc.PlayerGetSteamID(avatar));
-            else
-                infiniteStaminaPlayers.Add(SemiFunc.PlayerGetSteamID(avatar));
-            RepoAdminMenu.mls.LogInfo(SemiFunc.PlayerGetName(avatar) + " - Infinite Stamina - " + !b);
-        }
-
-        public static void toggleNoTarget(bool b, PlayerAvatar avatar) {
-            if (b)
-                noTargetPlayers.Remove(SemiFunc.PlayerGetSteamID(avatar));
-            else
-                noTargetPlayers.Add(SemiFunc.PlayerGetSteamID(avatar));
-            RepoAdminMenu.mls.LogInfo(SemiFunc.PlayerGetName(avatar) + " - No Target - " + !b);
-        }
-
-        public static void toggleNoTumble(bool b, PlayerAvatar avatar) {
-            if (b)
-                noTumblePlayers.Remove(SemiFunc.PlayerGetSteamID(avatar));
-            else
-                noTumblePlayers.Add(SemiFunc.PlayerGetSteamID(avatar));
-            RepoAdminMenu.mls.LogInfo(SemiFunc.PlayerGetName(avatar) + " - No Tumble - " + !b);
-        }
-
-        public static void toggleForceTumble(bool b, PlayerAvatar avatar) {
-            if (b)
-                forcedTumble.Remove(SemiFunc.PlayerGetSteamID(avatar));
-            else
-                forcedTumble.Add(SemiFunc.PlayerGetSteamID(avatar), 0);
-            RepoAdminMenu.mls.LogInfo(SemiFunc.PlayerGetName(avatar) + " - Force Tumble - " + !b);
-        }
 
         public static void killPlayer(PlayerAvatar avatar) {
             avatar.PlayerDeath(-1);
@@ -308,16 +220,17 @@ namespace RepoAdminMenu.Utils {
                     from.photonView.RPC("SpawnRPC", RpcTarget.All, new object[] { pos, rot });
                 }
             }
+        }
 
-            /*
-            from.transform.position = to.transform.position;
-            from.clientPosition = to.transform.position;
-            from.clientPositionCurrent = to.transform.position;
-            from.playerAvatarVisuals.transform.position = to.transform.position;
-            from.playerAvatarVisuals.visualPosition = to.transform.position;
-            if (from.photonView.IsMine) { 
-                from.playerTransform.transform.position = to.transform.position;
-            }*/
+        public static void KickPlayer(PlayerAvatar avatar) {
+            // no kicking host
+            if (avatar == PlayerAvatar.instance) {
+                return;
+            }
+
+            //avatar.photonView.RPC("OutroStartRPC", RpcTarget.All, new object[] { });
+            RepoAdminMenu.mls.LogInfo("Sending kick to: " + SemiFunc.PlayerGetName(avatar));
+            NetworkUtil.SendCommandSteamIDString("KickPlayer", avatar.steamID, "", ReceiverGroup.Others);
         }
     }
 }

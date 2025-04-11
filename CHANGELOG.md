@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.6](https://github.com/proferabg/RepoAdminMenu/releases/tag/1.0.6)
+
+Networked Settings Syncronization
+Player Kicking
+
+***For best results, install the mod on both the server and the client!***
+
+
 ## [1.0.5](https://github.com/proferabg/RepoAdminMenu/releases/tag/1.0.5)
 
 Added player teleportation
