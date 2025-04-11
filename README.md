@@ -1,4 +1,4 @@
-# RepoAdminMenu
+# RepoAdminMenu [![Github All Releases](https://img.shields.io/github/downloads/proferabg/RepoAdminMenu/total.svg)]()
 
 To open the menu, type `!menu` in chat or press `F8`.
 
