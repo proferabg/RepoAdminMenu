@@ -86,6 +86,11 @@ namespace RepoAdminMenu {
             return instance.forcedTumble[SemiFunc.PlayerGetSteamID(avatar)] = lastTumble;
         }
 
+        public static void UpdateOption(ref bool option, bool value) {
+            option = value;
+            UpdateClients();
+        }
+
         public static void UpdateClients() {
             if (SemiFunc.IsMasterClient()) {
                 RepoAdminMenu.mls.LogInfo("Sending Settings Sync");

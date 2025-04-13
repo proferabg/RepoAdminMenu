@@ -9,7 +9,7 @@ namespace RepoAdminMenu.Patches {
         [HarmonyPatch("SetInvestigate")]
         [HarmonyPrefix]
         private static bool SetInvestigate_Prefix(EnemyDirector __instance) {
-            return Settings.instance.deafEnemies;
+            return !Settings.instance.deafEnemies;
         }
 
     }

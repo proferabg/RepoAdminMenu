@@ -159,10 +159,9 @@ namespace RepoAdminMenu {
             });
         }
 
-
-        public static void addToggle(REPOPopupPage parent, string text, System.Action<bool> action, string off, string on, bool defaultValue) {
+        public static void addToggle(REPOPopupPage parent, string text, System.Action<bool> action, bool defaultValue, string[] buttonText = null) {
             parent.AddElementToScrollView(scrollView => {
-                var elem = MenuAPI.CreateREPOToggle(text, action, scrollView, Vector2.zero, off, on, defaultValue);
+                var elem = MenuAPI.CreateREPOToggle(text, action, scrollView, Vector2.zero, buttonText == null || buttonText.Length < 2 ? "Off" : buttonText[0], buttonText == null || buttonText.Length < 2 ? "On" : buttonText[1], !defaultValue);
                 return elem.rectTransform;
             });
         }
@@ -227,12 +226,12 @@ namespace RepoAdminMenu {
 
             var playerMenu = createMenu("R.A.M. - " + SemiFunc.PlayerGetName(avatar), "player", "playerList");
 
-            addToggle(playerMenu, "God Mode", (b) => { Settings.toggle(Settings.instance.godModePlayers, avatar.steamID, b); }, "Off", "On", !Settings.isGod(avatar));
-            addToggle(playerMenu, "No Death", (b) => { Settings.toggle(Settings.instance.noDeathPlayers, avatar.steamID, b); }, "Off", "On", !Settings.isNoDeath(avatar));
-            addToggle(playerMenu, "No Target", (b) => { Settings.toggle(Settings.instance.noTargetPlayers, avatar.steamID, b); }, "Off", "On", !Settings.isNoTarget(avatar));
-            addToggle(playerMenu, "No Tumble", (b) => { Settings.toggle(Settings.instance.noTumblePlayers, avatar.steamID, b); }, "Off", "On", !Settings.isNoTumble(avatar));
-            addToggle(playerMenu, "Infinite Stamina", (b) => { Settings.toggle(Settings.instance.infiniteStaminaPlayers, avatar.steamID, b); }, "Off", "On", !Settings.isInfiniteStamina(avatar));
-            addToggle(playerMenu, "Force Tumble", (b) => { Settings.toggleDictLong(Settings.instance.forcedTumble, avatar.steamID, b); }, "Off", "On", !Settings.isForceTumble(avatar));
+            addToggle(playerMenu, "God Mode", (b) => { Settings.toggle(Settings.instance.godModePlayers, avatar.steamID, b); }, Settings.isGod(avatar));
+            addToggle(playerMenu, "No Death", (b) => { Settings.toggle(Settings.instance.noDeathPlayers, avatar.steamID, b); }, Settings.isNoDeath(avatar));
+            addToggle(playerMenu, "No Target", (b) => { Settings.toggle(Settings.instance.noTargetPlayers, avatar.steamID, b); }, Settings.isNoTarget(avatar));
+            addToggle(playerMenu, "No Tumble", (b) => { Settings.toggle(Settings.instance.noTumblePlayers, avatar.steamID, b); }, Settings.isNoTumble(avatar));
+            addToggle(playerMenu, "Infinite Stamina", (b) => { Settings.toggle(Settings.instance.infiniteStaminaPlayers, avatar.steamID, b); }, Settings.isInfiniteStamina(avatar));
+            addToggle(playerMenu, "Force Tumble", (b) => { Settings.toggleDictLong(Settings.instance.forcedTumble, avatar.steamID, b); }, Settings.isForceTumble(avatar));
             addButton(playerMenu, "Upgrades", () => { navigate(playerMenu, "playerUpgrade"); });
             addButton(playerMenu, "Heal", () => { PlayerUtil.healPlayer(avatar); });
             addButton(playerMenu, "Kill", () => { PlayerUtil.killPlayer(avatar); });
@@ -398,7 +397,7 @@ namespace RepoAdminMenu {
             var mapMenu = createMenu("R.A.M. - Map Settings", "map", "mainmenu");
 
             foreach(KeyValuePair<string, Level> entry in MapUtil.getMaps()) {
-                addToggle(mapMenu, entry.Key, (b) => { MapUtil.setMapEnabled(entry.Value, !b); }, "Off", "On", !MapUtil.isMapEnabled(entry.Value));
+                addToggle(mapMenu, entry.Key, (b) => { MapUtil.setMapEnabled(entry.Value, b); }, MapUtil.isMapEnabled(entry.Value));
             }
 
             addIntSlider(mapMenu, "Current Level", "", (v) => { RunManager.instance.levelsCompleted = v; }, 1, 500, RunManager.instance.levelsCompleted);
@@ -425,16 +424,16 @@ namespace RepoAdminMenu {
         private static void openSettingsMenu() {
             var settingsMenu = createMenu("R.A.M. - Settings", "settings", "mainmenu");
 
-            addToggle(settingsMenu, "Infinite Money", (b) => { Settings.instance.infiniteMoney = !b; Settings.UpdateClients(); }, "Off", "On", !Settings.instance.infiniteMoney);
-            addToggle(settingsMenu, "No Break", (b) => { Settings.instance.noBreak = !b; Settings.UpdateClients(); }, "Off", "On", !Settings.instance.noBreak);
-            addToggle(settingsMenu, "No Battery/Ammo Drain", (b) => { Settings.instance.noBatteryDrain = !b; Settings.UpdateClients(); }, "Off", "On", !Settings.instance.noBatteryDrain);
-            addToggle(settingsMenu, "No Traps", (b) => { Settings.instance.noTraps = !b; Settings.UpdateClients(); }, "Off", "On", !Settings.instance.noTraps);
-            addToggle(settingsMenu, "Weak Enemies", (b) => { Settings.instance.weakEnemies = !b; Settings.UpdateClients(); }, "Off", "On", !Settings.instance.weakEnemies);
-            addToggle(settingsMenu, "Deaf Enemies", (b) => { Settings.instance.deafEnemies = !b; Settings.UpdateClients(); }, "Off", "On", !Settings.instance.deafEnemies);
-            addToggle(settingsMenu, "Blind Enemies", (b) => { Settings.instance.blindEnemies = !b; Settings.UpdateClients(); }, "Off", "On", !Settings.instance.blindEnemies);
-            addToggle(settingsMenu, "Boom Hammer", (b) => { Settings.instance.boomhammer = !b; Settings.UpdateClients(); }, "Off", "On", !Settings.instance.boomhammer);
-            addToggle(settingsMenu, "Friendly Duck", (b) => { Settings.instance.friendlyDuck = !b; Settings.UpdateClients(); }, "Off", "On", !Settings.instance.friendlyDuck);
-            addToggle(settingsMenu, "Upgrade In Shop", (b) => { Settings.instance.useShopUpgrades = !b; Settings.UpdateClients(); }, "Off", "On", !Settings.instance.useShopUpgrades);
+            addToggle(settingsMenu, "Infinite Money", (b) => { Settings.UpdateOption(ref Settings.instance.infiniteMoney, !b); Settings.UpdateClients(); }, Settings.instance.infiniteMoney);
+            addToggle(settingsMenu, "No Break", (b) => { Settings.UpdateOption(ref Settings.instance.noBreak, !b); }, Settings.instance.noBreak);
+            addToggle(settingsMenu, "No Battery/Ammo Drain", (b) => { Settings.UpdateOption(ref Settings.instance.noBatteryDrain, !b); }, Settings.instance.noBatteryDrain);
+            addToggle(settingsMenu, "No Traps", (b) => { Settings.UpdateOption(ref Settings.instance.noTraps, !b); }, Settings.instance.noTraps);
+            addToggle(settingsMenu, "Weak Enemies", (b) => { Settings.UpdateOption(ref Settings.instance.weakEnemies, !b); }, Settings.instance.weakEnemies);
+            addToggle(settingsMenu, "Deaf Enemies", (b) => { Settings.UpdateOption(ref Settings.instance.deafEnemies, !b); }, Settings.instance.deafEnemies);
+            addToggle(settingsMenu, "Blind Enemies", (b) => { Settings.UpdateOption(ref Settings.instance.blindEnemies, !b); }, Settings.instance.blindEnemies);
+            addToggle(settingsMenu, "Boom Hammer", (b) => { Settings.UpdateOption(ref Settings.instance.boomhammer, !b); }, Settings.instance.boomhammer);
+            addToggle(settingsMenu, "Friendly Duck", (b) => { Settings.UpdateOption(ref Settings.instance.friendlyDuck, !b); }, Settings.instance.friendlyDuck);
+            addToggle(settingsMenu, "Upgrade In Shop", (b) => { Settings.UpdateOption(ref Settings.instance.useShopUpgrades, !b); }, Settings.instance.useShopUpgrades);
 
             openPage(settingsMenu, "settings");
         }

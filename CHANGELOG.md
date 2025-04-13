@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.7](https://github.com/proferabg/RepoAdminMenu/releases/tag/1.0.7)
+
+* Fix Deaf Enemies being inversely toggled
+
+
 ## [1.0.6](https://github.com/proferabg/RepoAdminMenu/releases/tag/1.0.6)
 
 * Networked Settings Syncronization
