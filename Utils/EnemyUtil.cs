@@ -26,68 +26,78 @@ namespace RepoAdminMenu.Utils {
                 string name = setup.name.Replace("Enemy - ", string.Empty);
                 switch (name) {
                     case "Ceiling Eye":
-                        enemySetups.Add("Peeper", setup);
+                        addEnemySetupSafe("Peeper", setup);
                         break;
                     case "Thin Man":
-                        enemySetups.Add("Shadow Child", setup);
+                        addEnemySetupSafe("Shadow Child", setup);
                         break;
                     case "Gnome":
-                        enemySetups.Add("Gnome", setup);
+                        addEnemySetupSafe("Gnome", setup);
                         break;
                     case "Duck":
-                        enemySetups.Add("Apex Predator", setup);
+                        addEnemySetupSafe("Apex Predator", setup);
                         break;
                     case "Slow Mouth":
-                        enemySetups.Add("Spewer", setup);
+                        addEnemySetupSafe("Spewer", setup);
                         break;
                     case "Valuable Thrower":
-                        enemySetups.Add("Rugrat", setup);
+                        addEnemySetupSafe("Rugrat", setup);
                         break;
                     case "Animal":
-                        enemySetups.Add("Animal", setup);
+                        addEnemySetupSafe("Animal", setup);
                         break;
                     case "Upscream":
-                        enemySetups.Add("Upscream", setup);
+                        addEnemySetupSafe("Upscream", setup);
                         break;
                     case "Hidden":
-                        enemySetups.Add("Hidden", setup);
+                        addEnemySetupSafe("Hidden", setup);
                         break;
                     case "Tumbler":
-                        enemySetups.Add("Chef", setup);
+                        addEnemySetupSafe("Chef", setup);
                         break;
                     case "Bowtie":
-                        enemySetups.Add("Bowtie", setup);
+                        addEnemySetupSafe("Bowtie", setup);
                         break;
                     case "Floater":
-                        enemySetups.Add("Mentalist", setup);
+                        addEnemySetupSafe("Mentalist", setup);
                         break;
                     case "Bang":
-                        enemySetups.Add("Bang", setup);
+                        addEnemySetupSafe("Bang", setup);
                         break;
                     case "Head":
-                        enemySetups.Add("Headman", setup);
+                        addEnemySetupSafe("Headman", setup);
                         break;
                     case "Robe":
-                        enemySetups.Add("Robe", setup);
+                        addEnemySetupSafe("Robe", setup);
                         break;
                     case "Hunter":
-                        enemySetups.Add("Huntsman", setup);
+                        addEnemySetupSafe("Huntsman", setup);
                         break;
                     case "Runner":
-                        enemySetups.Add("Reaper", setup);
+                        addEnemySetupSafe("Reaper", setup);
                         break;
                     case "Beamer":
-                        enemySetups.Add("Clown", setup);
+                        addEnemySetupSafe("Clown", setup);
                         break;
                     case "Slow Walker":
-                        enemySetups.Add("Trudge", setup);
+                        addEnemySetupSafe("Trudge", setup);
                         break;
                     default:
-                        modEnemySetups.Add(name, setup);
+                        addModEnemySetupSafe(name, setup);
                         break;
 
                 }
             }
+        }
+
+        internal static void addEnemySetupSafe(string name, EnemySetup setup) {
+            if(!enemySetups.ContainsKey(name))
+                enemySetups.Add(name, setup);
+        }
+
+        internal static void addModEnemySetupSafe(string name, EnemySetup setup) {
+            if (!modEnemySetups.ContainsKey(name))
+                modEnemySetups.Add(name, setup);
         }
 
         public static SortedDictionary<string, EnemySetup> getEnemies() {

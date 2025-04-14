@@ -11,7 +11,9 @@ namespace RepoAdminMenu.Utils {
         public static void Init() {
             items.Clear();
             foreach (Item item in StatsManager.instance.GetItems()) {
-                items.Add(item.name.Replace("Item ", string.Empty), item);
+                string name = item.name.Replace("Item ", string.Empty);
+                if (!items.ContainsKey(name))
+                    items.Add(name, item);
             }
         }
 

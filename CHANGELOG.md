@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.8](https://github.com/proferabg/RepoAdminMenu/releases/tag/1.0.8)
+
+* Fix EnemyUtil registration on duplicate enemies.
+
+
 ## [1.0.7](https://github.com/proferabg/RepoAdminMenu/releases/tag/1.0.7)
 
 * Fix Deaf Enemies being inversely toggled
