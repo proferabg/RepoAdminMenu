@@ -7,14 +7,14 @@ assignees: ''
 
 ---
 
-**What should the feature do?**
+## **What should the feature do?**
 Describe how the feature should work.
 
-**Who should the feature target?**
+## **Who should the feature target?**
 Does this target a specific player, enemy, item, or valuable?
 
-**What is the reason the feature should be added?**
+## **What is the reason the feature should be added?**
 Describe why the feature should be added. 
 
-**Additional context**
+## **Additional context**
 Add any other context or screenshots about the feature request here.

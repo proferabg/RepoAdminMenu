@@ -7,24 +7,24 @@ assignees: ''
 
 ---
 
-**Describe the bug**
+## **Describe the bug (Required)**
 A clear and concise description of what the bug is.
-
-**To Reproduce**
+ 
+## **Steps To Reproduce (Required)**
 Steps to reproduce the behavior:
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'
 4. See error
 
-**Expected behavior**
+## **Expected behavior (Required)**
 A clear and concise description of what you expected to happen.
 
-**Client Log**
-Upload your client log to LogPaste, Pastebin, or MCLogs and paste the link to the logs here.
+## **Client Log (Required)**
+**_Failure to attach your log will result in immediate closure of the ticket._** Please upload your client log to LogPaste, Pastebin, or MCLogs and paste the link to the logs here or attach them directly as a file.
 
-**Screenshots**
+## **Screenshots (Optional)**
 If applicable, add screenshots to help explain your problem.
 
-**Additional context**
+## **Additional context (Optional)**
 Add any other context about the problem here.
