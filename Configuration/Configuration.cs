@@ -14,6 +14,8 @@ namespace RepoAdminMenu {
 
         public static ConfigEntry<bool> ResetSettingsOnLobbyCreation { get; private set; }
 
+        public static ConfigEntry<bool> CloseMenuOnSpawning { get; private set; }
+
         public static void Init(ConfigFile config) {
             EnableCommands = config.Bind<bool>(
                 "General",
@@ -48,6 +50,13 @@ namespace RepoAdminMenu {
                 "ResetSettingsOnLobbyCreation",
                 true,
                 "Should menu settings and player toggles reset on new lobby creation"
+            );
+
+            CloseMenuOnSpawning = config.Bind<bool>(
+                "General",
+                "CloseMenuOnSpawning",
+                true,
+                "Should the menu close when spawning an enemy"
             );
 
         }

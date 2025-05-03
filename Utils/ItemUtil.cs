@@ -23,10 +23,15 @@ namespace RepoAdminMenu.Utils {
 
         public static void spawnItem(Item item) {
             Vector3 position = PlayerAvatar.instance.transform.position + new Vector3(0f, 1f, 0f) + PlayerAvatar.instance.transform.forward * 1f;
+            GameObject spawnedObject;
             if (SemiFunc.IsMultiplayer()) {
-                Items.SpawnItem(item, position, Quaternion.identity);
+                spawnedObject = Items.SpawnItem(item, position, Quaternion.identity);
             } else {
-                Object.Instantiate(item.prefab, position, Quaternion.identity);
+                spawnedObject = Object.Instantiate(item.prefab, position, Quaternion.identity);
+            }
+            ItemBattery itemBattery = spawnedObject.GetComponentInParent<ItemBattery>();
+            if (itemBattery && itemBattery.batteryLifeInt < 6) {
+                itemBattery.SetBatteryLife(100);
             }
         }
     }

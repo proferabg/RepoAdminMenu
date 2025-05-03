@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.0.9](https://github.com/proferabg/RepoAdminMenu/releases/tag/1.0.9)
+
+* Fixed upgrade sliders (requires mod on client side also) (#18)
+* Added images to readme/thunderstore (#21)
+* Added a money slider (#23)
+* Fixed healing clients (#25)
+* Fixed gun glitch (#27)
+* Added config option for not hiding the menu after spawning enemies (#28)
+
 ## [1.0.8](https://github.com/proferabg/RepoAdminMenu/releases/tag/1.0.8)
 
 * Fix EnemyUtil registration on duplicate enemies.

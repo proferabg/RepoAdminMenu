@@ -261,15 +261,15 @@ namespace RepoAdminMenu {
 
             var upgradesMenu = createMenu("R.A.M. - " + SemiFunc.PlayerGetName(avatar) + " - Upgrades", "playerUpgrade", "player");
 
-            addIntSlider(upgradesMenu, "Health", "", (v) => { PlayerUtil.upgrade("health", avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("health", avatar));
-            addIntSlider(upgradesMenu, "Jump", "", (v) => { PlayerUtil.upgrade("jump", avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("jump", avatar));
-            addIntSlider(upgradesMenu, "Launch", "", (v) => { PlayerUtil.upgrade("launch", avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("launch", avatar));
-            addIntSlider(upgradesMenu, "Map Player Count", "", (v) => { PlayerUtil.upgrade("playercount", avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playercount", avatar));
-            addIntSlider(upgradesMenu, "Range", "", (v) => { PlayerUtil.upgrade("range", avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("range", avatar));
-            addIntSlider(upgradesMenu, "Speed", "", (v) => { PlayerUtil.upgrade("speed", avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("speed", avatar));
-            addIntSlider(upgradesMenu, "Stamina", "", (v) => { PlayerUtil.upgrade("stamina", avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("stamina", avatar));
-            addIntSlider(upgradesMenu, "Strength", "", (v) => { PlayerUtil.upgrade("strength", avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("strength", avatar));
-            addIntSlider(upgradesMenu, "Throw", "", (v) => { PlayerUtil.upgrade("throw", avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("throw", avatar));
+            addIntSlider(upgradesMenu, "Health", "", (v) => { PlayerUtil.upgradeHealth(avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("health", avatar));
+            addIntSlider(upgradesMenu, "Jump", "", (v) => { PlayerUtil.upgradeJump(avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("jump", avatar));
+            addIntSlider(upgradesMenu, "Launch", "", (v) => { PlayerUtil.upgradeLaunch(avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("launch", avatar));
+            addIntSlider(upgradesMenu, "Map Player Count", "", (v) => { PlayerUtil.upgradeMapPlayerCount(avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playercount", avatar));
+            addIntSlider(upgradesMenu, "Range", "", (v) => { PlayerUtil.upgradeRange(avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("range", avatar));
+            addIntSlider(upgradesMenu, "Speed", "", (v) => { PlayerUtil.upgradeSpeed(avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("speed", avatar));
+            addIntSlider(upgradesMenu, "Stamina", "", (v) => { PlayerUtil.upgradeStamina(avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("stamina", avatar));
+            addIntSlider(upgradesMenu, "Strength", "", (v) => { PlayerUtil.upgradeStrength(avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("strength", avatar));
+            addIntSlider(upgradesMenu, "Throw", "", (v) => { PlayerUtil.upgradeThrow(avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("throw", avatar));
 
             openPage(upgradesMenu, "playerUpgrade");
         }
@@ -401,6 +401,7 @@ namespace RepoAdminMenu {
             }
 
             addIntSlider(mapMenu, "Current Level", "", (v) => { RunManager.instance.levelsCompleted = v; }, 1, 500, RunManager.instance.levelsCompleted);
+            addIntSlider(mapMenu, "Money", "", (v) => { PunManager.instance.SetRunStatSet("currency", v); }, 0, 9999, StatsManager.instance.runStats["currency"]);
             addButton(mapMenu, "Map Selector", () => { navigate(mapMenu, "levelSelector"); });
             addButton(mapMenu, "Discover Extraction Point", ExtractionPointUtil.discoverNext);
             addButton(mapMenu, "Complete Extraction Point", ExtractionPointUtil.complete);

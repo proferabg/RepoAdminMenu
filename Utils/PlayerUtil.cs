@@ -1,15 +1,14 @@
-﻿using ExitGames.Client.Photon;
-using HarmonyLib;
+﻿using HarmonyLib;
 using Photon.Pun;
 using Photon.Realtime;
-using REPOLib.Extensions;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
 namespace RepoAdminMenu.Utils {
     internal class PlayerUtil {
+
+        private static FieldInfo maxHealthField = AccessTools.Field(typeof(PlayerHealth), "maxHealth");
+        private static FieldInfo healthField = AccessTools.Field(typeof(PlayerHealth), "health");
 
         public static void killPlayer(PlayerAvatar avatar) {
             avatar.PlayerDeath(-1);
@@ -36,131 +35,155 @@ namespace RepoAdminMenu.Utils {
 
         public static void healPlayer(PlayerAvatar avatar) {
             PlayerHealth health = avatar.playerHealth;
-            FieldInfo maxHealthField = AccessTools.Field(typeof(PlayerHealth), "maxHealth");
-            FieldInfo healthField = AccessTools.Field(typeof(PlayerHealth), "health");
             if (maxHealthField != null && healthField != null) {
-                avatar.playerHealth.Heal((int)maxHealthField.GetValue(health), true);
-                StatsManager.instance.SetPlayerHealth(SemiFunc.PlayerGetSteamID(avatar), (int)healthField.GetValue(health), false);
+                avatar.playerHealth.HealOther((int)maxHealthField.GetValue(health), true);
                 RepoAdminMenu.mls.LogInfo(SemiFunc.PlayerGetName(avatar) + " Healed!");
             } else {
                 RepoAdminMenu.mls.LogError("Failed to grab field 'PlayerHealth->maxHealth' or 'PlayerHealth->health'!");
             }
         }
 
-        public static void upgrade(string type, PlayerAvatar avatar, int level) {
-            StatsManager statsManager = StatsManager.instance;
+        public static void upgradeHealth(PlayerAvatar avatar, int level) {
             string playerSteamId = SemiFunc.PlayerGetSteamID(avatar);
-            FieldInfo photonViewField = AccessTools.Field(typeof(PunManager), "photonView");
+            // local
+            StatsManager.instance.playerUpgradeHealth[playerSteamId] = level;
+            if (SemiFunc.IsMasterClientOrSingleplayer()) {
+                PunManager.instance.UpgradePlayerHealthRPC(playerSteamId, level);
+            }
+            // multiplayer
+            if (SemiFunc.IsMasterClient()) {
+                PunManager.instance.photonView.RPC("UpgradePlayerHealthRPC", RpcTarget.All, new object[] {
+                    playerSteamId,
+                    StatsManager.instance.playerUpgradeHealth[playerSteamId]
+                });
+            }
+        }
 
-            if (type.Equals("health") && statsManager.playerUpgradeHealth.ContainsKey(playerSteamId)) {
-                statsManager.playerUpgradeHealth[playerSteamId] = level;
-                if (SemiFunc.IsMasterClientOrSingleplayer()) {
-                    PunManager.instance.UpgradePlayerHealthRPC(playerSteamId, level);
-                }
-                if (SemiFunc.IsMasterClient() && photonViewField != null) {
-                    ((PhotonView)photonViewField.GetValue(PunManager.instance)).RPC("UpgradePlayerHealthRPC", RpcTarget.Others, new object[]
-                    {
+        public static void upgradeJump(PlayerAvatar avatar, int level) {
+            string playerSteamId = SemiFunc.PlayerGetSteamID(avatar);
+            // local
+            StatsManager.instance.playerUpgradeExtraJump[playerSteamId] = level;
+            if (SemiFunc.IsMasterClientOrSingleplayer()) {
+                PunManager.instance.UpgradePlayerExtraJumpRPC(playerSteamId, level);
+            }
+            //multiplayer
+            if (SemiFunc.IsMasterClient()) {
+                PunManager.instance.photonView.RPC("UpgradePlayerExtraJumpRPC", RpcTarget.All, new object[] {
                     playerSteamId,
-                    statsManager.playerUpgradeHealth[playerSteamId]
-                    });
-                }
-            } else if (type.Equals("jump") && statsManager.playerUpgradeExtraJump.ContainsKey(playerSteamId)) {
-                statsManager.playerUpgradeExtraJump[playerSteamId] = level;
-                if (SemiFunc.IsMasterClientOrSingleplayer()) {
-                    PunManager.instance.UpgradePlayerExtraJumpRPC(playerSteamId, level);
-                }
-                if (SemiFunc.IsMasterClient() && photonViewField != null) {
-                    ((PhotonView)photonViewField.GetValue(PunManager.instance)).RPC("UpgradePlayerExtraJumpRPC", RpcTarget.Others, new object[]
-                    {
-                    playerSteamId,
-                    statsManager.playerUpgradeExtraJump[playerSteamId]
-                    });
-                }
-            } else if (type.Equals("launch") && statsManager.playerUpgradeLaunch.ContainsKey(playerSteamId)) {
-                statsManager.playerUpgradeLaunch[playerSteamId] = level;
-                if (SemiFunc.IsMasterClientOrSingleplayer()) {
-                    PunManager.instance.UpgradePlayerTumbleLaunchRPC(playerSteamId, level);
-                }
-                if (SemiFunc.IsMasterClient() && photonViewField != null) {
-                    ((PhotonView)photonViewField.GetValue(PunManager.instance)).RPC("UpgradePlayerTumbleLaunchRPC", RpcTarget.Others, new object[]
-                    {
-                    playerSteamId,
-                    statsManager.playerUpgradeLaunch[playerSteamId]
-                    });
-                }
-            } else if (type.Equals("playercount") && statsManager.playerUpgradeMapPlayerCount.ContainsKey(playerSteamId)) {
-                statsManager.playerUpgradeMapPlayerCount[playerSteamId] = level;
-                if (SemiFunc.IsMasterClientOrSingleplayer()) {
-                    PunManager.instance.UpgradeMapPlayerCountRPC(playerSteamId, level);
-                }
-                if (SemiFunc.IsMasterClient() && photonViewField != null) {
-                    ((PhotonView)photonViewField.GetValue(PunManager.instance)).RPC("UpgradeMapPlayerCountRPC", RpcTarget.Others, new object[]
-                    {
-                    playerSteamId,
-                    statsManager.playerUpgradeMapPlayerCount[playerSteamId]
-                    });
-                }
-            } else if (type.Equals("range") && statsManager.playerUpgradeRange.ContainsKey(playerSteamId)) {
-                statsManager.playerUpgradeRange[playerSteamId] = level;
-                if (SemiFunc.IsMasterClientOrSingleplayer()) {
-                    PunManager.instance.UpgradePlayerGrabRangeRPC(playerSteamId, level);
-                }
-                if (SemiFunc.IsMasterClient() && photonViewField != null) {
-                    ((PhotonView)photonViewField.GetValue(PunManager.instance)).RPC("UpgradePlayerGrabRangeRPC", RpcTarget.Others, new object[]
-                    {
-                    playerSteamId,
-                    statsManager.playerUpgradeRange[playerSteamId]
-                    });
-                }
-            } else if (type.Equals("speed") && statsManager.playerUpgradeSpeed.ContainsKey(playerSteamId)) {
-                statsManager.playerUpgradeSpeed[playerSteamId] = level;
-                if (SemiFunc.IsMasterClientOrSingleplayer()) {
-                    PunManager.instance.UpgradePlayerSprintSpeedRPC(playerSteamId, level);
-                }
-                if (SemiFunc.IsMasterClient() && photonViewField != null) {
-                    ((PhotonView)photonViewField.GetValue(PunManager.instance)).RPC("UpgradePlayerSprintSpeedRPC", RpcTarget.Others, new object[]
-                    {
-                    playerSteamId,
-                    statsManager.playerUpgradeSpeed[playerSteamId]
-                    });
-                }
-            } else if (type.Equals("stamina") && statsManager.playerUpgradeStamina.ContainsKey(playerSteamId)) {
-                statsManager.playerUpgradeStamina[playerSteamId] = level;
-                if (SemiFunc.IsMasterClientOrSingleplayer()) {
-                    PunManager.instance.UpgradePlayerEnergyRPC(playerSteamId, level);
-                }
-                if (SemiFunc.IsMasterClient() && photonViewField != null) {
-                    ((PhotonView)photonViewField.GetValue(PunManager.instance)).RPC("UpgradePlayerEnergyRPC", RpcTarget.Others, new object[]
-                    {
-                    playerSteamId,
-                    statsManager.playerUpgradeStamina[playerSteamId]
-                    });
-                }
+                    StatsManager.instance.playerUpgradeExtraJump[playerSteamId]
+                });
+            }
+        }
 
-            } else if (type.Equals("strength") && statsManager.playerUpgradeStrength.ContainsKey(playerSteamId)) {
-                statsManager.playerUpgradeStrength[playerSteamId] = level;
-                if (SemiFunc.IsMasterClientOrSingleplayer()) {
-                    PunManager.instance.UpgradePlayerGrabStrengthRPC(playerSteamId, level);
-                }
-                if (SemiFunc.IsMasterClient() && photonViewField != null) {
-                    ((PhotonView)photonViewField.GetValue(PunManager.instance)).RPC("UpgradePlayerGrabStrengthRPC", RpcTarget.Others, new object[]
-                    {
+        public static void upgradeLaunch(PlayerAvatar avatar, int level) {
+            string playerSteamId = SemiFunc.PlayerGetSteamID(avatar);
+            // local
+            StatsManager.instance.playerUpgradeLaunch[playerSteamId] = level;
+            if (SemiFunc.IsMasterClientOrSingleplayer()) {
+                PunManager.instance.UpgradePlayerTumbleLaunchRPC(playerSteamId, level);
+            }
+            // multiplayer
+            if (SemiFunc.IsMasterClient()) {
+                PunManager.instance.photonView.RPC("UpgradePlayerTumbleLaunchRPC", RpcTarget.Others, new object[] {
                     playerSteamId,
-                    statsManager.playerUpgradeStrength[playerSteamId]
-                    });
-                }
-            } else if (type.Equals("throw") && statsManager.playerUpgradeThrow.ContainsKey(playerSteamId)) {
-                statsManager.playerUpgradeThrow[playerSteamId] = level;
-                if (SemiFunc.IsMasterClientOrSingleplayer()) {
-                    PunManager.instance.UpgradePlayerThrowStrengthRPC(playerSteamId, level);
-                }
-                if (SemiFunc.IsMasterClient() && photonViewField != null) {
-                    ((PhotonView)photonViewField.GetValue(PunManager.instance)).RPC("UpgradePlayerThrowStrengthRPC", RpcTarget.Others, new object[]
-                    {
+                    StatsManager.instance.playerUpgradeLaunch[playerSteamId]
+                });
+            }
+        }
+
+        public static void upgradeMapPlayerCount(PlayerAvatar avatar, int level) {
+            string playerSteamId = SemiFunc.PlayerGetSteamID(avatar);
+            // local
+            StatsManager.instance.playerUpgradeMapPlayerCount[playerSteamId] = level;
+            if (SemiFunc.IsMasterClientOrSingleplayer()) {
+                PunManager.instance.UpgradeMapPlayerCountRPC(playerSteamId, level);
+            }
+            // multiplayer
+            if (SemiFunc.IsMasterClient()) {
+                PunManager.instance.photonView.RPC("UpgradeMapPlayerCountRPC", RpcTarget.Others, new object[] {
                     playerSteamId,
-                    statsManager.playerUpgradeThrow[playerSteamId]
-                    });
-                }
+                    StatsManager.instance.playerUpgradeMapPlayerCount[playerSteamId]
+                });
+            }
+        }
+
+        public static void upgradeRange(PlayerAvatar avatar, int level) {
+            string playerSteamId = SemiFunc.PlayerGetSteamID(avatar);
+            // local
+            StatsManager.instance.playerUpgradeRange[playerSteamId] = level;
+            if (SemiFunc.IsMasterClientOrSingleplayer()) {
+                PunManager.instance.UpgradePlayerGrabRangeRPC(playerSteamId, level);
+            }
+            // multiplayer
+            if (SemiFunc.IsMasterClient()) {
+                PunManager.instance.photonView.RPC("UpgradePlayerGrabRangeRPC", RpcTarget.Others, new object[] {
+                    playerSteamId,
+                    StatsManager.instance.playerUpgradeRange[playerSteamId]
+                });
+            }
+        }
+
+        public static void upgradeSpeed(PlayerAvatar avatar, int level) {
+            string playerSteamId = SemiFunc.PlayerGetSteamID(avatar);
+            // local
+            StatsManager.instance.playerUpgradeSpeed[playerSteamId] = level;
+            if (SemiFunc.IsMasterClientOrSingleplayer()) {
+                PunManager.instance.UpgradePlayerSprintSpeedRPC(playerSteamId, level);
+            }
+            // multiplayer
+            if (SemiFunc.IsMasterClient()) {
+                PunManager.instance.photonView.RPC("UpgradePlayerSprintSpeedRPC", RpcTarget.Others, new object[] {
+                    playerSteamId,
+                    StatsManager.instance.playerUpgradeSpeed[playerSteamId]
+                });
+            }
+        }
+
+        public static void upgradeStamina(PlayerAvatar avatar, int level) {
+            string playerSteamId = SemiFunc.PlayerGetSteamID(avatar);
+            // local
+            StatsManager.instance.playerUpgradeStamina[playerSteamId] = level;
+            if (SemiFunc.IsMasterClientOrSingleplayer()) {
+                PunManager.instance.UpgradePlayerEnergyRPC(playerSteamId, level);
+            }
+            // multiplayer
+            if (SemiFunc.IsMasterClient()) {
+                PunManager.instance.photonView.RPC("UpgradePlayerEnergyRPC", RpcTarget.Others, new object[] {
+                    playerSteamId,
+                    StatsManager.instance.playerUpgradeStamina[playerSteamId]
+                });
+            }
+        }
+
+        public static void upgradeStrength(PlayerAvatar avatar, int level) {
+            string playerSteamId = SemiFunc.PlayerGetSteamID(avatar);
+            // local
+            StatsManager.instance.playerUpgradeStrength[playerSteamId] = level;
+            if (SemiFunc.IsMasterClientOrSingleplayer()) {
+                PunManager.instance.UpgradePlayerGrabStrengthRPC(playerSteamId, level);
+            }
+            // multiplayer
+            if (SemiFunc.IsMasterClient()) {
+                PunManager.instance.photonView.RPC("UpgradePlayerGrabStrengthRPC", RpcTarget.Others, new object[] {
+                    playerSteamId,
+                    StatsManager.instance.playerUpgradeStrength[playerSteamId]
+                });
+            }
+        }
+
+        public static void upgradeThrow(PlayerAvatar avatar, int level) {
+            string playerSteamId = SemiFunc.PlayerGetSteamID(avatar);
+            // local
+            StatsManager.instance.playerUpgradeThrow[playerSteamId] = level;
+            if (SemiFunc.IsMasterClientOrSingleplayer()) {
+                PunManager.instance.UpgradePlayerThrowStrengthRPC(playerSteamId, level);
+            }
+            // multiplayer
+            if (SemiFunc.IsMasterClient()) {
+                PunManager.instance.photonView.RPC("UpgradePlayerThrowStrengthRPC", RpcTarget.Others, new object[] {
+                    playerSteamId,
+                    StatsManager.instance.playerUpgradeThrow[playerSteamId]
+                });
             }
         }
 

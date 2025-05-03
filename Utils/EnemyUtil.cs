@@ -125,7 +125,9 @@ namespace RepoAdminMenu.Utils {
                 if (enemySetup != null) {
                     Vector3 position = PlayerAvatar.instance.transform.position;
                     EnemyDirector.instance.StartCoroutine(SpawnEnemy(enemySetup, position));
-                    Menu.toggleMenu();
+                    if (Configuration.CloseMenuOnSpawning.Value) {
+                        Menu.toggleMenu();
+                    }
                     MissionUI.instance.MissionText($"Spawning '{enemy}'. Run...!", Color.red, Color.red, 3f);
                 } else {
                     MissionUI.instance.MissionText($"Could not find enemy named '" + enemy + "'", Color.red, Color.red, 3f);
