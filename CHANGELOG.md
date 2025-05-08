@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.10](https://github.com/proferabg/RepoAdminMenu/releases/tag/1.0.10)
+
+* Fix patch to work with REPO beta versions (#34)
+
 ## [1.0.9](https://github.com/proferabg/RepoAdminMenu/releases/tag/1.0.9)
 
 * Fixed upgrade sliders (requires mod on client side also) (#18)

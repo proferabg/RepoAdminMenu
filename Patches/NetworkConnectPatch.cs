@@ -6,9 +6,9 @@ namespace RepoAdminMenu.Patches {
     [HarmonyPatch(typeof(NetworkConnect))]
     internal class NetworkConnectPatch {
 
-        [HarmonyPatch("Awake")]
+        [HarmonyPatch("Start")]
         [HarmonyPostfix]
-        private static void Awake_Postfix() {
+        private static void Start_Postfix() {
             NetworkUtil.Init();
         }
 
