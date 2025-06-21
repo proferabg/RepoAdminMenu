@@ -6,19 +6,21 @@ namespace RepoAdminMenu.Patches {
     [HarmonyPatch(typeof(PunManager))]
     internal class PunManagerPatch {
 
-        [HarmonyPatch("UpdateHealthRightAway")]
+        [HarmonyPatch(nameof(PunManager.UpdateHealthRightAway))]
         [HarmonyPrefix]
-        private static bool Prefix_UpdateHealthRightAway(ref string playerName) {
-            PlayerAvatar playerAvatar = SemiFunc.PlayerAvatarGetFromSteamID(playerName);
+        // ReSharper disable once InconsistentNaming
+        private static bool Prefix_UpdateHealthRightAway(ref string _steamID) {
+            PlayerAvatar playerAvatar = SemiFunc.PlayerAvatarGetFromSteamID(_steamID);
             if (playerAvatar == SemiFunc.PlayerAvatarLocal()) {
-                playerAvatar.playerHealth.maxHealth = 100 + (StatsManager.instance.playerUpgradeHealth[playerName] * 20);
+                playerAvatar.playerHealth.maxHealth = 100 + (StatsManager.instance.playerUpgradeHealth[_steamID] * 20);
                 playerAvatar.playerHealth.Heal(playerAvatar.playerHealth.maxHealth - playerAvatar.playerHealth.health, false);
             }
             return false;
         }
 
-        [HarmonyPatch("UpdateEnergyRightAway")]
+        [HarmonyPatch(nameof(PunManager.UpdateEnergyRightAway))]
         [HarmonyPrefix]
+        // ReSharper disable once InconsistentNaming
         private static bool Prefix_UpdateEnergyRightAway(ref string _steamID) {
             if (SemiFunc.PlayerAvatarGetFromSteamID(_steamID) == SemiFunc.PlayerAvatarLocal()) {
                 PlayerController.instance.EnergyStart = 40 + (StatsManager.instance.playerUpgradeStamina[_steamID] * 10f);
@@ -27,8 +29,9 @@ namespace RepoAdminMenu.Patches {
             return false;
         }
 
-        [HarmonyPatch("UpdateExtraJumpRightAway")]
+        [HarmonyPatch(nameof(PunManager.UpdateExtraJumpRightAway))]
         [HarmonyPrefix]
+        // ReSharper disable once InconsistentNaming
         private static bool Prefix_UpdateExtraJumpRightAway(ref string _steamID) {
             if (SemiFunc.PlayerAvatarGetFromSteamID(_steamID) == SemiFunc.PlayerAvatarLocal()) {
                 PlayerController.instance.JumpExtra = StatsManager.instance.playerUpgradeExtraJump[_steamID];
@@ -36,8 +39,9 @@ namespace RepoAdminMenu.Patches {
             return false;
         }
 
-        [HarmonyPatch("UpdateMapPlayerCountRightAway")]
+        [HarmonyPatch(nameof(PunManager.UpdateMapPlayerCountRightAway))]
         [HarmonyPrefix]
+        // ReSharper disable once InconsistentNaming
         private static bool UpdateMapPlayerCountRightAway(ref string _steamID) {
             PlayerAvatar playerAvatar = SemiFunc.PlayerAvatarGetFromSteamID(_steamID);
             if (playerAvatar == SemiFunc.PlayerAvatarLocal()) {
@@ -46,15 +50,17 @@ namespace RepoAdminMenu.Patches {
             return false;
         }
 
-        [HarmonyPatch("UpdateTumbleLaunchRightAway")]
+        [HarmonyPatch(nameof(PunManager.UpdateTumbleLaunchRightAway))]
         [HarmonyPrefix]
+        // ReSharper disable once InconsistentNaming
         private static bool Prefix_UpdateTumbleLaunchRightAway(ref string _steamID) {
             SemiFunc.PlayerAvatarGetFromSteamID(_steamID).tumble.tumbleLaunch = StatsManager.instance.playerUpgradeLaunch[_steamID];
             return false;
         }
 
-        [HarmonyPatch("UpdateSprintSpeedRightAway")]
+        [HarmonyPatch(nameof(PunManager.UpdateSprintSpeedRightAway))]
         [HarmonyPrefix]
+        // ReSharper disable once InconsistentNaming
         private static bool Prefix_UpdateSprintSpeedRightAway(ref string _steamID) {
             if (SemiFunc.PlayerAvatarGetFromSteamID(_steamID) == SemiFunc.PlayerAvatarLocal()) {
                 PlayerController.instance.SprintSpeed = StatsManager.instance.playerUpgradeSpeed[_steamID];
@@ -63,8 +69,9 @@ namespace RepoAdminMenu.Patches {
             return false;
         }
 
-        [HarmonyPatch("UpdateGrabStrengthRightAway")]
+        [HarmonyPatch(nameof(PunManager.UpdateGrabStrengthRightAway))]
         [HarmonyPrefix]
+        // ReSharper disable once InconsistentNaming
         private static bool Prefix_UpdateGrabStrengthRightAway(ref string _steamID) {
             PlayerAvatar playerAvatar = SemiFunc.PlayerAvatarGetFromSteamID(_steamID);
             if (playerAvatar) {
@@ -73,8 +80,9 @@ namespace RepoAdminMenu.Patches {
             return false;
         }
 
-        [HarmonyPatch("UpdateThrowStrengthRightAway")]
+        [HarmonyPatch(nameof(PunManager.UpdateThrowStrengthRightAway))]
         [HarmonyPrefix]
+        // ReSharper disable once InconsistentNaming
         private static bool Prefix_UpdateThrowStrengthRightAway(ref string _steamID) {
             PlayerAvatar playerAvatar = SemiFunc.PlayerAvatarGetFromSteamID(_steamID);
             if (playerAvatar) {
@@ -83,8 +91,9 @@ namespace RepoAdminMenu.Patches {
             return false;
         }
 
-        [HarmonyPatch("UpdateGrabRangeRightAway")]
+        [HarmonyPatch(nameof(PunManager.UpdateGrabRangeRightAway))]
         [HarmonyPrefix]
+        // ReSharper disable once InconsistentNaming
         private static bool Prefix_UpdateGrabRangeRightAway(ref string _steamID) {
             PlayerAvatar playerAvatar = SemiFunc.PlayerAvatarGetFromSteamID(_steamID);
             if (playerAvatar) {

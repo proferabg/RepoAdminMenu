@@ -270,7 +270,9 @@ namespace RepoAdminMenu {
             addIntSlider(upgradesMenu, "Stamina", "", (v) => { PlayerUtil.upgradeStamina(avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("stamina", avatar));
             addIntSlider(upgradesMenu, "Strength", "", (v) => { PlayerUtil.upgradeStrength(avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("strength", avatar));
             addIntSlider(upgradesMenu, "Throw", "", (v) => { PlayerUtil.upgradeThrow(avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("throw", avatar));
-
+            addIntSlider(upgradesMenu, "Tumble Wings", "", (v) => { PlayerUtil.upgradeTumbleWings(avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("tumblewings", avatar));
+            addIntSlider(upgradesMenu, "Crouch Rest", "", (v) => { PlayerUtil.upgradeCrouchRest(avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("crouchrest", avatar));
+            
             openPage(upgradesMenu, "playerUpgrade");
         }
 

@@ -10,7 +10,7 @@ namespace RepoAdminMenu.Utils {
 
         public static void Init() {
             items.Clear();
-            foreach (Item item in StatsManager.instance.GetItems()) {
+            foreach (Item item in StatsManager.instance.itemDictionary.Values) {
                 string name = item.name.Replace("Item ", string.Empty);
                 if (!items.ContainsKey(name))
                     items.Add(name, item);
