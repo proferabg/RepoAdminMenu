@@ -3,7 +3,6 @@ using Photon.Pun;
 using Photon.Realtime;
 using System.Collections.Generic;
 using System.Linq;
-using static UnityEngine.Rendering.DebugUI;
 
 namespace RepoAdminMenu.Utils {
     internal class NetworkUtil : IOnEventCallback {
@@ -44,6 +43,10 @@ namespace RepoAdminMenu.Utils {
             PhotonNetwork.RaiseEvent(RAMEventCode, new object[] { command, steamId, value }, new RaiseEventOptions { Receivers = receiverGroup }, SendOptions.SendReliable);
         }
 
+        internal static void SendCommandSteamIDStringInt(string command, string steamId, string str, int num, ReceiverGroup receiverGroup) {
+            PhotonNetwork.RaiseEvent(RAMEventCode, new object[] { command, steamId, str, num }, new RaiseEventOptions { Receivers = receiverGroup }, SendOptions.SendReliable);
+        }
+
         internal static void SendCommandString(string command, string value, ReceiverGroup receiverGroup) {
             PhotonNetwork.RaiseEvent(RAMEventCode, new object[] { command, value }, new RaiseEventOptions { Receivers = receiverGroup }, SendOptions.SendReliable);
         }
@@ -54,7 +57,7 @@ namespace RepoAdminMenu.Utils {
 
         public void OnEvent(EventData photonEvent) {
             if (photonEvent.Code == RAMEventCode) {
-                RepoAdminMenu.mls.LogInfo("Received RAM Network Event!");
+                //RepoAdminMenu.mls.LogInfo("Received RAM Network Event!");
                 object[] args = (object[])photonEvent.CustomData;
 
                 if (args.Length == 1) {
@@ -65,7 +68,7 @@ namespace RepoAdminMenu.Utils {
                             Settings.UpdateClients();
                             break;
                         default:
-                            RepoAdminMenu.mls.LogWarning("Unknown command(" + args.Length + "): " + cmd);
+                            RepoAdminMenu.mls.LogWarning("Network event: Unknown command(" + args.Length + "): " + cmd);
                             break;
                     }
                 } else if (args.Length == 2) {
@@ -80,7 +83,7 @@ namespace RepoAdminMenu.Utils {
                             }
                             break;
                         default:
-                            RepoAdminMenu.mls.LogWarning("Unknown command(" + args.Length + "): " + cmd);
+                            RepoAdminMenu.mls.LogWarning("Network event: Unknown command(" + args.Length + "): " + cmd);
                             break;
                     }
                 } else if (args.Length == 3) {
@@ -88,38 +91,55 @@ namespace RepoAdminMenu.Utils {
                     string steamId = args[1].ToString();
                     PlayerAvatar player = SemiFunc.PlayerGetFromSteamID(steamId);
                     if (player == null) {
-                        RepoAdminMenu.mls.LogWarning("Invalid player: " + steamId);
+                        RepoAdminMenu.mls.LogWarning("Network event: Invalid player: " + steamId);
                         return;
                     }
 
                     switch (cmd) {
-                        case "KickPlayer":
-                            if (!SemiFunc.IsMasterClient() && PlayerAvatar.instance.steamID.Equals(steamId)) {
-                                RepoAdminMenu.mls.LogInfo("Received kick request");
-                                string clientSecret = args[2].ToString();
-                                if (clientSecret.Length != 16) {
-                                    RepoAdminMenu.mls.LogInfo("Sending secret to master client to confirm kick");
-                                    clientRandomString = randomString(16);
-                                    SendCommandSteamIDString("KickPlayerAck", steamId, clientRandomString, ReceiverGroup.MasterClient);
-                                } else if (clientSecret.Equals(clientRandomString)) {
-                                    RepoAdminMenu.mls.LogInfo("I was kicked :(");
-                                    NetworkManager.instance.LeavePhotonRoom();
-                                    clientRandomString = "";
-                                }
-                            }
+                        //case "KickPlayer":
+                        //    if (!SemiFunc.IsMasterClient() && PlayerAvatar.instance.steamID.Equals(steamId)) {
+                        //        RepoAdminMenu.mls.LogInfo("Received kick request");
+                        //        string clientSecret = args[2].ToString();
+                        //        if (clientSecret.Length != 16) {
+                        //            RepoAdminMenu.mls.LogInfo("Sending secret to master client to confirm kick");
+                        //            clientRandomString = randomString(16);
+                        //            SendCommandSteamIDString("KickPlayerAck", steamId, clientRandomString, ReceiverGroup.MasterClient);
+                        //        } else if (clientSecret.Equals(clientRandomString)) {
+                        //            RepoAdminMenu.mls.LogInfo("I was kicked :(");
+                        //            NetworkManager.instance.LeavePhotonRoom();
+                        //            clientRandomString = "";
+                        //        }
+                        //    }
+                        //    break;
+                        //case "KickPlayerAck":
+                        //    if (SemiFunc.IsMasterClient()) {
+                        //        RepoAdminMenu.mls.LogInfo("Sending kick acknowledge: " + SemiFunc.PlayerGetName(player));
+                        //        SendCommandSteamIDString("KickPlayer", steamId, args[2].ToString(), ReceiverGroup.Others);
+                        //    }
+                        //    break;
+                        default:
+                            RepoAdminMenu.mls.LogWarning("Unknown command(" + args.Length + "): " + cmd);
                             break;
-                        case "KickPlayerAck":
-                            if (SemiFunc.IsMasterClient()) {
-                                RepoAdminMenu.mls.LogInfo("Sending kick acknowledge: " + SemiFunc.PlayerGetName(player));
-                                SendCommandSteamIDString("KickPlayer", steamId, args[2].ToString(), ReceiverGroup.Others);
-                            }
+                    }
+                } else if (args.Length == 4) {
+                    string cmd = args[0].ToString();
+                    string steamId = args[1].ToString();
+                    PlayerAvatar player = SemiFunc.PlayerGetFromSteamID(steamId);
+                    if (player == null) {
+                        RepoAdminMenu.mls.LogWarning("Network event: Invalid player: " + steamId);
+                        return;
+                    }
+
+                    switch (cmd) {
+                        case "UpgradeSync":
+                            PlayerUtil.upgradeSync(player, args[2].ToString(), (int) args[3]);
                             break;
                         default:
                             RepoAdminMenu.mls.LogWarning("Unknown command(" + args.Length + "): " + cmd);
                             break;
                     }
                 } else {
-                    RepoAdminMenu.mls.LogWarning("Received event with incorrect argument count: " + args.Length);
+                    RepoAdminMenu.mls.LogWarning("Received network event with incorrect argument count: " + args.Length);
                     return;
                 }
             }

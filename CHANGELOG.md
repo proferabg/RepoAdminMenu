@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.0.11](https://github.com/proferabg/RepoAdminMenu/releases/tag/1.0.11)
+
+* Fixed menu for v0.1.2.53_beta (#56)
+* Fixed no-target (#43)
+* Fixed sprint speed upgrade (#38)
+* Added return to truck (#40)
+* Added support for mod upgrades (#29)
+* Added new upgrades from beta
+* Added 'Ban Player' button
+* Changed 'Kick Player' button to work without mod being on clients
+* Changed 'Report a Bug' to also open the client log
+
 ## [1.0.10](https://github.com/proferabg/RepoAdminMenu/releases/tag/1.0.10)
 
 * Fix patch to work with REPO beta versions (#34)

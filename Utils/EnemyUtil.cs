@@ -14,10 +14,12 @@ namespace RepoAdminMenu.Utils {
             enemySetups.Clear();
             modEnemySetups.Clear();
 
-            List<EnemySetup> setups = new List<EnemySetup>();
-            setups.AddRange(EnemyDirector.instance.enemiesDifficulty1);
-            setups.AddRange(EnemyDirector.instance.enemiesDifficulty2);
-            setups.AddRange(EnemyDirector.instance.enemiesDifficulty3);
+            List<EnemySetup> setups =
+            [
+                .. EnemyDirector.instance.enemiesDifficulty1,
+                .. EnemyDirector.instance.enemiesDifficulty2,
+                .. EnemyDirector.instance.enemiesDifficulty3,
+            ];
 
             foreach (EnemySetup setup in setups) {
                 if (setup.name.StartsWith("Enemy Group"))

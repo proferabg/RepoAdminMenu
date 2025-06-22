@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
 using RepoAdminMenu.Utils;
+using REPOLib.Modules;
 
 namespace RepoAdminMenu {
     internal class Menu {
@@ -178,6 +179,7 @@ namespace RepoAdminMenu {
                 return elem.rectTransform;
             });
         }
+
         public static void addFloatSlider(REPOPopupPage parent, string text, string description, System.Action<float> action, float min, float max, int precision, float defaultValue) {
             parent.AddElementToScrollView(scrollView => {
                 var elem = MenuAPI.CreateREPOSlider(text, description, action, scrollView, Vector2.zero, min, max, precision, defaultValue, "", "", REPOSlider.BarBehavior.UpdateWithValue);
@@ -200,7 +202,7 @@ namespace RepoAdminMenu {
             addButton(mainMenu, "Map", () => { navigate(mainMenu, "map"); });
             addButton(mainMenu, "Settings", () => { navigate(mainMenu, "settings"); });
             addButton(mainMenu, "Credits", () => { navigate(mainMenu, "credits"); });
-            addButton(mainMenu, "Report a Bug", () => { Application.OpenURL("https://github.com/proferabg/RepoAdminMenu/issues"); });
+            addButton(mainMenu, "Report a Bug", () => { Application.OpenURL("https://github.com/proferabg/RepoAdminMenu/issues"); Application.OpenURL("file://" + Application.persistentDataPath + "/Player.log"); });
 
             openPage(mainMenu, "mainmenu");
         }
@@ -236,13 +238,22 @@ namespace RepoAdminMenu {
             addButton(playerMenu, "Heal", () => { PlayerUtil.healPlayer(avatar); });
             addButton(playerMenu, "Kill", () => { PlayerUtil.killPlayer(avatar); });
             addButton(playerMenu, "Revive", () => { PlayerUtil.revivePlayer(avatar); });
-            addButton(playerMenu, "Teleport To", () => { PlayerUtil.teleportTo(avatar); });
+            addButton(playerMenu, "Teleport To Player", () => { PlayerUtil.teleportTo(avatar); });
             addButton(playerMenu, "Summon", () => { PlayerUtil.summon(avatar); });
+            addButton(playerMenu, "Return To Truck", () => { PlayerUtil.returnToTruck(avatar); });
             addButton(playerMenu, "Give Crown", () => { PlayerUtil.giveCrown(avatar); });
             addButton(playerMenu, "Kick Player", () => {
                 closePage(playerMenu);
                 openConfirmMenu("player", "Kick: " + SemiFunc.PlayerGetName(avatar), new Dictionary<string, System.Action> {
                     {"Yes", () => { PlayerUtil.KickPlayer(avatar); }},
+                    {"No", null}
+                });
+            });
+
+            addButton(playerMenu, "Ban Player", () => {
+                closePage(playerMenu);
+                openConfirmMenu("player", "Ban: " + SemiFunc.PlayerGetName(avatar), new Dictionary<string, System.Action> {
+                    {"Yes", () => {PlayerUtil.BanPlayer(avatar); }},
                     {"No", null}
                 });
             });
@@ -261,15 +272,23 @@ namespace RepoAdminMenu {
 
             var upgradesMenu = createMenu("R.A.M. - " + SemiFunc.PlayerGetName(avatar) + " - Upgrades", "playerUpgrade", "player");
 
-            addIntSlider(upgradesMenu, "Health", "", (v) => { PlayerUtil.upgradeHealth(avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("health", avatar));
-            addIntSlider(upgradesMenu, "Jump", "", (v) => { PlayerUtil.upgradeJump(avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("jump", avatar));
-            addIntSlider(upgradesMenu, "Launch", "", (v) => { PlayerUtil.upgradeLaunch(avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("launch", avatar));
-            addIntSlider(upgradesMenu, "Map Player Count", "", (v) => { PlayerUtil.upgradeMapPlayerCount(avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playercount", avatar));
-            addIntSlider(upgradesMenu, "Range", "", (v) => { PlayerUtil.upgradeRange(avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("range", avatar));
-            addIntSlider(upgradesMenu, "Speed", "", (v) => { PlayerUtil.upgradeSpeed(avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("speed", avatar));
-            addIntSlider(upgradesMenu, "Stamina", "", (v) => { PlayerUtil.upgradeStamina(avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("stamina", avatar));
-            addIntSlider(upgradesMenu, "Strength", "", (v) => { PlayerUtil.upgradeStrength(avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("strength", avatar));
-            addIntSlider(upgradesMenu, "Throw", "", (v) => { PlayerUtil.upgradeThrow(avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("throw", avatar));
+            addIntSlider(upgradesMenu, "Crouch Rest", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeCrouchRest", v); PunManager.instance.UpdateCrouchRestRightAway(selectedPlayerId); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeCrouchRest", avatar));
+            addIntSlider(upgradesMenu, "Health", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeHealth", v); PunManager.instance.UpdateHealthRightAway(selectedPlayerId); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeHealth", avatar));
+            addIntSlider(upgradesMenu, "Jump", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeExtraJump", v); PunManager.instance.UpdateExtraJumpRightAway(selectedPlayerId); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeExtraJump", avatar));
+            addIntSlider(upgradesMenu, "Launch", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeLaunch", v); PunManager.instance.UpdateTumbleLaunchRightAway(selectedPlayerId); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeLaunch", avatar));
+            addIntSlider(upgradesMenu, "Map Player Count", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeMapPlayerCount", v); PunManager.instance.UpdateMapPlayerCountRightAway(selectedPlayerId); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeMapPlayerCount", avatar));
+            addIntSlider(upgradesMenu, "Range", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeRange", v); PunManager.instance.UpdateGrabRangeRightAway(selectedPlayerId); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeRange", avatar));
+            addIntSlider(upgradesMenu, "Speed", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeSpeed", v); PunManager.instance.UpdateSprintSpeedRightAway(selectedPlayerId); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeSpeed", avatar));
+            addIntSlider(upgradesMenu, "Stamina", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeStamina", v); PunManager.instance.UpdateEnergyRightAway(selectedPlayerId); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeStamina", avatar));
+            addIntSlider(upgradesMenu, "Strength", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeStrength", v); PunManager.instance.UpdateGrabStrengthRightAway(selectedPlayerId); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeStrength", avatar));
+            addIntSlider(upgradesMenu, "Throw", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeThrow", v); PunManager.instance.UpdateThrowStrengthRightAway(selectedPlayerId); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeThrow", avatar));
+            addIntSlider(upgradesMenu, "Tumble Wings", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeTumbleWings", v); PunManager.instance.UpdateTumbleWingsRightAway(selectedPlayerId); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeTumbleWings", avatar));
+
+            foreach (KeyValuePair<string, PlayerUpgrade> upgradePair in UpgradeUtil.getUpgrades()) {
+                PlayerUpgrade upgrade = upgradePair.Value;
+                addIntSlider(upgradesMenu, "(Mod) " + upgradePair.Key, "", (v) => { UpgradeUtil.UpgradeLevel(upgrade, avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, upgrade.GetLevel(avatar));
+            }
+
 
             openPage(upgradesMenu, "playerUpgrade");
         }

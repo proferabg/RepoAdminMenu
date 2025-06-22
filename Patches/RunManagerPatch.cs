@@ -31,6 +31,7 @@ namespace RepoAdminMenu.Patches {
             ValuableUtil.Init();
             EnemyUtil.Init();
             MapUtil.Init();
+            UpgradeUtil.Init();
         }
 
         [HarmonyPatch("SetRunLevel")]

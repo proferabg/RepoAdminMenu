@@ -1,6 +1,6 @@
-﻿using REPOLib.Extensions;
-using REPOLib.Modules;
+﻿using REPOLib.Modules;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace RepoAdminMenu.Utils {
@@ -10,7 +10,7 @@ namespace RepoAdminMenu.Utils {
 
         public static void Init() {
             items.Clear();
-            foreach (Item item in StatsManager.instance.GetItems()) {
+            foreach (Item item in StatsManager.instance.itemDictionary.Values.ToList()) {
                 string name = item.name.Replace("Item ", string.Empty);
                 if (!items.ContainsKey(name))
                     items.Add(name, item);
