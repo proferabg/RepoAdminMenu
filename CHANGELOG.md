@@ -3,6 +3,7 @@
 ## [1.0.12](https://github.com/proferabg/RepoAdminMenu/releases/tag/1.0.12)
 
 * Updated for R.E.P.O. v0.2.0
+* Fix no target for shadow child (thin man)
 
 ## [1.0.11](https://github.com/proferabg/RepoAdminMenu/releases/tag/1.0.11)
 
