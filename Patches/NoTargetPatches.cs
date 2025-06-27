@@ -11,6 +11,12 @@ namespace RepoAdminMenu.Patches {
             return !Settings.isNoTarget(playerAvatar);
         }
 
+        [HarmonyPatch(typeof(EnemyOnScreen), "GetOnScreen")]
+        [HarmonyPrefix]
+        private static bool EnemyOnScreen_GetOnScreen_Prefix(PlayerAvatar _playerAvatar) {
+            return !Settings.isNoTarget(_playerAvatar);
+        }
+
         [HarmonyPatch(typeof(Enemy), "Update")]
         [HarmonyPrefix]
         private static void Enemy_Update_Prefix(Enemy __instance, ref PlayerAvatar ___TargetPlayerAvatar) {
