@@ -1,7 +1,5 @@
 # RepoAdminMenu [![Github All Releases](https://img.shields.io/github/downloads/proferabg/RepoAdminMenu/total.svg)]()
 
-## ***<span style="color:red">Version 1.0.11 is for the BETA ONLY!</span>***
-
 To open the menu, type `!menu` in chat or press `F8`.
 
 Command can be disabled and the keybind can be remapped using the config.

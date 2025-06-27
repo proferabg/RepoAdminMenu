@@ -7,9 +7,8 @@ namespace RepoAdminMenu.Patches {
 
         [HarmonyPatch(typeof(Enemy), "SetChaseTarget")]
         [HarmonyPrefix]
-        private static void Enemy_SetChaseTarget_Prefix(ref PlayerAvatar playerAvatar) {
-            if (Settings.isNoTarget(playerAvatar))
-                return;
+        private static bool Enemy_SetChaseTarget_Prefix(PlayerAvatar playerAvatar) {
+            return !Settings.isNoTarget(playerAvatar);
         }
 
         [HarmonyPatch(typeof(Enemy), "Update")]
