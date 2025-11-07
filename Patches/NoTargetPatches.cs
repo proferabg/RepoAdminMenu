@@ -99,9 +99,9 @@ namespace RepoAdminMenu.Patches {
 
         [HarmonyPatch(typeof(EnemyElsa), "Update")]
         [HarmonyPrefix]
-        private static void EnemyElsa_Update_Prefix(Enemy __instance, ref PlayerAvatar ___targetPlayer) {
-            if (___targetPlayer != null && Settings.isNoTarget(___targetPlayer)) {
-                ___targetPlayer = null;
+        private static void EnemyElsa_Update_Prefix(Enemy __instance, ref PlayerAvatar ___playerTarget) {
+            if (___playerTarget != null && Settings.isNoTarget(___playerTarget)) {
+                ___playerTarget = null;
                 __instance.CurrentState = EnemyState.Roaming;
                 __instance.DisableChase(1);
             }
