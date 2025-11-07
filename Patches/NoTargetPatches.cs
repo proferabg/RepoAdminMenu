@@ -167,6 +167,39 @@ namespace RepoAdminMenu.Patches {
             }
         }
 
+        [HarmonyPatch(typeof(EnemyHunter), "Update")]
+        [HarmonyPrefix]
+        private static void EnemyHunter_Update_Prefix(EnemyHunter __instance) {
+            if(__instance.enemy.Rigidbody != null) {
+                EnemyRigidbody rigidbody = __instance.enemy.Rigidbody;
+                if (rigidbody.onTouchPlayerAvatar != null && Settings.isNoTarget(rigidbody.onTouchPlayerAvatar)) {
+                    rigidbody.onTouchPlayerAvatar = null;
+                    __instance.UpdateState(EnemyHunter.State.Roam);
+
+                }
+                if(rigidbody.onGrabbedPlayerAvatar != null && Settings.isNoTarget(rigidbody.onGrabbedPlayerAvatar)) {
+                    rigidbody.onGrabbedPlayerAvatar = null;
+                    __instance.UpdateState(EnemyHunter.State.Roam);
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(EnemyHunter), "UpdateState")]
+        [HarmonyPrefix]
+        private static bool EnemyHunter_UpdateState_Prefix(EnemyHunter __instance, EnemyHunter.State _state) {
+            if(_state == EnemyHunter.State.Aim) {
+                foreach (PlayerAvatar player in SemiFunc.PlayerGetAll()) {
+                    if (Settings.isNoTarget(player) && __instance.investigatePointTransform != null &&
+                        player.PlayerVisionTarget != null && player.PlayerVisionTarget.VisionTransform != null &&
+                        __instance.investigatePointTransform == player.PlayerVisionTarget.VisionTransform) {
+                        __instance.currentState = EnemyHunter.State.Roam;
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
         [HarmonyPatch(typeof(EnemyOogly), "Update")]
         [HarmonyPrefix]
         private static void EnemyOogly_Update_Prefix(Enemy __instance, ref PlayerAvatar ___targetPlayer) {
@@ -209,12 +242,21 @@ namespace RepoAdminMenu.Patches {
 
         [HarmonyPatch(typeof(EnemyShadow), "Update")]
         [HarmonyPrefix]
-        private static void EnemyShadow_Update_Prefix(Enemy __instance, ref PlayerAvatar ___playerTarget) {
+        private static void EnemyShadow_Update_Prefix(EnemyShadow __instance, ref PlayerAvatar ___playerTarget) {
             if (___playerTarget != null && Settings.isNoTarget(___playerTarget)) {
                 ___playerTarget = null;
-                __instance.CurrentState = EnemyState.Roaming;
-                __instance.DisableChase(1);
+                __instance.UpdateState(EnemyShadow.State.ChooseTarget);
             }
+        }
+
+        [HarmonyPatch(typeof(EnemyShadow), "BendLogic")]
+        [HarmonyPrefix]
+        private static bool EnemyShadow_BendLogic_Prefix(EnemyShadow __instance, ref PlayerAvatar ___playerTarget) {
+            if (___playerTarget == null || Settings.isNoTarget(___playerTarget)) {
+                ___playerTarget = null;
+                return false;
+            }
+            return true;
         }
 
         [HarmonyPatch(typeof(EnemySlowMouth), "Update")]
@@ -275,6 +317,17 @@ namespace RepoAdminMenu.Patches {
                 __instance.CurrentState = EnemyState.Roaming;
                 __instance.DisableChase(1);
             }
+        }
+
+        [HarmonyPatch(typeof(EnemyTricycle), "StateMachine")]
+        [HarmonyPrefix]
+        private static bool EnemyTricycle_StateMachine_Prefix(Enemy __instance, ref PlayerAvatar ___playerTarget, ref EnemyTricycle.State ___currentState) {
+            if (___playerTarget == null || Settings.isNoTarget(___playerTarget)) {
+                ___playerTarget = null;
+                ___currentState = EnemyTricycle.State.Roam;
+                return false;
+            }
+            return true;
         }
 
         [HarmonyPatch(typeof(EnemyTumbler), "Update")]
