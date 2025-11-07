@@ -272,17 +272,17 @@ namespace RepoAdminMenu {
 
             var upgradesMenu = createMenu("R.A.M. - " + SemiFunc.PlayerGetName(avatar) + " - Upgrades", "playerUpgrade", "player");
 
-            addIntSlider(upgradesMenu, "Crouch Rest", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeCrouchRest", v); PunManager.instance.UpdateCrouchRestRightAway(selectedPlayerId); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeCrouchRest", avatar));
-            addIntSlider(upgradesMenu, "Health", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeHealth", v); PunManager.instance.UpdateHealthRightAway(selectedPlayerId); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeHealth", avatar));
-            addIntSlider(upgradesMenu, "Jump", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeExtraJump", v); PunManager.instance.UpdateExtraJumpRightAway(selectedPlayerId); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeExtraJump", avatar));
-            addIntSlider(upgradesMenu, "Launch", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeLaunch", v); PunManager.instance.UpdateTumbleLaunchRightAway(selectedPlayerId); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeLaunch", avatar));
-            addIntSlider(upgradesMenu, "Map Player Count", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeMapPlayerCount", v); PunManager.instance.UpdateMapPlayerCountRightAway(selectedPlayerId); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeMapPlayerCount", avatar));
-            addIntSlider(upgradesMenu, "Range", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeRange", v); PunManager.instance.UpdateGrabRangeRightAway(selectedPlayerId); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeRange", avatar));
-            addIntSlider(upgradesMenu, "Speed", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeSpeed", v); PunManager.instance.UpdateSprintSpeedRightAway(selectedPlayerId); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeSpeed", avatar));
-            addIntSlider(upgradesMenu, "Stamina", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeStamina", v); PunManager.instance.UpdateEnergyRightAway(selectedPlayerId); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeStamina", avatar));
-            addIntSlider(upgradesMenu, "Strength", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeStrength", v); PunManager.instance.UpdateGrabStrengthRightAway(selectedPlayerId); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeStrength", avatar));
-            addIntSlider(upgradesMenu, "Throw", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeThrow", v); PunManager.instance.UpdateThrowStrengthRightAway(selectedPlayerId); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeThrow", avatar));
-            addIntSlider(upgradesMenu, "Tumble Wings", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeTumbleWings", v); PunManager.instance.UpdateTumbleWingsRightAway(selectedPlayerId); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeTumbleWings", avatar));
+            addIntSlider(upgradesMenu, "Crouch Rest", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeCrouchRest", v); PunManager.instance.UpdateCrouchRestRightAway(selectedPlayerId, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeCrouchRest", avatar));
+            addIntSlider(upgradesMenu, "Health", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeHealth", v); PunManager.instance.UpdateHealthRightAway(selectedPlayerId, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeHealth", avatar));
+            addIntSlider(upgradesMenu, "Jump", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeExtraJump", v); PunManager.instance.UpdateExtraJumpRightAway(selectedPlayerId, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeExtraJump", avatar));
+            addIntSlider(upgradesMenu, "Launch", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeLaunch", v); PunManager.instance.UpdateTumbleLaunchRightAway(selectedPlayerId, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeLaunch", avatar));
+            addIntSlider(upgradesMenu, "Map Player Count", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeMapPlayerCount", v); PunManager.instance.UpdateMapPlayerCountRightAway(selectedPlayerId, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeMapPlayerCount", avatar));
+            addIntSlider(upgradesMenu, "Range", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeRange", v); PunManager.instance.UpdateGrabRangeRightAway(selectedPlayerId, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeRange", avatar));
+            addIntSlider(upgradesMenu, "Speed", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeSpeed", v); PunManager.instance.UpdateSprintSpeedRightAway(selectedPlayerId, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeSpeed", avatar));
+            addIntSlider(upgradesMenu, "Stamina", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeStamina", v); PunManager.instance.UpdateEnergyRightAway(selectedPlayerId, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeStamina", avatar));
+            addIntSlider(upgradesMenu, "Strength", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeStrength", v); PunManager.instance.UpdateGrabStrengthRightAway(selectedPlayerId, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeStrength", avatar));
+            addIntSlider(upgradesMenu, "Throw", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeThrow", v); PunManager.instance.UpdateThrowStrengthRightAway(selectedPlayerId, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeThrow", avatar));
+            addIntSlider(upgradesMenu, "Tumble Wings", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeTumbleWings", v); PunManager.instance.UpdateTumbleWingsRightAway(selectedPlayerId, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeTumbleWings", avatar));
 
             foreach (KeyValuePair<string, PlayerUpgrade> upgradePair in UpgradeUtil.getUpgrades()) {
                 PlayerUpgrade upgrade = upgradePair.Value;
@@ -331,7 +331,7 @@ namespace RepoAdminMenu {
         private static void openSpawnValuablesTinyMenu() {
             var valuablesTinyMenu = createMenu("R.A.M. - Tiny Valuables", "spawnValuableTiny", "spawnValuable");
 
-            foreach (KeyValuePair<string, GameObject> entry in ValuableUtil.getTinyValuables()) {
+            foreach (KeyValuePair<string, PrefabRef> entry in ValuableUtil.getTinyValuables()) {
                 addButton(valuablesTinyMenu, entry.Key, () => ValuableUtil.spawnValuable(entry.Value));
             }
 
@@ -341,7 +341,7 @@ namespace RepoAdminMenu {
         private static void openSpawnValuablesSmallMenu() {
             var valuablesSmallMenu = createMenu("R.A.M. - Small Valuables", "spawnValuableSmall", "spawnValuable");
 
-            foreach (KeyValuePair<string, GameObject> entry in ValuableUtil.getSmallValuables()) {
+            foreach (KeyValuePair<string, PrefabRef> entry in ValuableUtil.getSmallValuables()) {
                 addButton(valuablesSmallMenu, entry.Key, () => ValuableUtil.spawnValuable(entry.Value));
             }
 
@@ -351,7 +351,7 @@ namespace RepoAdminMenu {
         private static void openSpawnValuablesMediumMenu() {
             var valuablesMediumMenu = createMenu("R.A.M. - Medium Valuables", "spawnValuableMedium", "spawnValuable");
 
-            foreach (KeyValuePair<string, GameObject> entry in ValuableUtil.getMediumValuables()) {
+            foreach (KeyValuePair<string, PrefabRef> entry in ValuableUtil.getMediumValuables()) {
                 addButton(valuablesMediumMenu, entry.Key, () => ValuableUtil.spawnValuable(entry.Value));
             }
 
@@ -361,7 +361,7 @@ namespace RepoAdminMenu {
         private static void openSpawnValuablesBigMenu() {
             var valuablesBigMenu = createMenu("R.A.M. - Big Valuables", "spawnValuableBig", "spawnValuable");
 
-            foreach (KeyValuePair<string, GameObject> entry in ValuableUtil.getBigValuables()) {
+            foreach (KeyValuePair<string, PrefabRef> entry in ValuableUtil.getBigValuables()) {
                 addButton(valuablesBigMenu, entry.Key, () => ValuableUtil.spawnValuable(entry.Value));
             }
 
@@ -371,7 +371,7 @@ namespace RepoAdminMenu {
         private static void openSpawnValuablesWideMenu() {
             var valuablesWideMenu = createMenu("R.A.M. - Wide Valuables", "spawnValuableWide", "spawnValuable");
 
-            foreach (KeyValuePair<string, GameObject> entry in ValuableUtil.getWideValuables()) {
+            foreach (KeyValuePair<string, PrefabRef> entry in ValuableUtil.getWideValuables()) {
                 addButton(valuablesWideMenu, entry.Key, () => ValuableUtil.spawnValuable(entry.Value));
             }
 
@@ -381,7 +381,7 @@ namespace RepoAdminMenu {
         private static void openSpawnValuablesTallMenu() {
             var valuablesTallMenu = createMenu("R.A.M. - Tall Valuables", "spawnValuableTall", "spawnValuable");
 
-            foreach (KeyValuePair<string, GameObject> entry in ValuableUtil.getTallValuables()) {
+            foreach (KeyValuePair<string, PrefabRef> entry in ValuableUtil.getTallValuables()) {
                 addButton(valuablesTallMenu, entry.Key, () => ValuableUtil.spawnValuable(entry.Value));
             }
 
@@ -391,7 +391,7 @@ namespace RepoAdminMenu {
         private static void openSpawnValuablesVeryTallMenu() {
             var valuablesVeryTallMenu = createMenu("R.A.M. - Very Tall Valuables", "spawnValuableVeryTall", "spawnValuable");
 
-            foreach (KeyValuePair<string, GameObject> entry in ValuableUtil.getVeryTallValuables()) {
+            foreach (KeyValuePair<string, PrefabRef> entry in ValuableUtil.getVeryTallValuables()) {
                 addButton(valuablesVeryTallMenu, entry.Key, () => ValuableUtil.spawnValuable(entry.Value));
             }
 

@@ -27,10 +27,10 @@ namespace RepoAdminMenu.Utils {
             if (SemiFunc.IsMultiplayer()) {
                 spawnedObject = Items.SpawnItem(item, position, Quaternion.identity);
             } else {
-                spawnedObject = Object.Instantiate(item.prefab, position, Quaternion.identity);
+                spawnedObject = Object.Instantiate(item.prefab.Prefab, position, Quaternion.identity);
             }
             ItemBattery itemBattery = spawnedObject.GetComponentInParent<ItemBattery>();
-            if (itemBattery && itemBattery.batteryLifeInt < 6) {
+            if (itemBattery && itemBattery.batteryBars < 6) {
                 itemBattery.SetBatteryLife(100);
             }
         }
