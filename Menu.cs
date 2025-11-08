@@ -331,7 +331,7 @@ namespace RepoAdminMenu {
         private static void openSpawnValuablesTinyMenu() {
             var valuablesTinyMenu = createMenu("R.A.M. - Tiny Valuables", "spawnValuableTiny", "spawnValuable");
 
-            foreach (KeyValuePair<string, GameObject> entry in ValuableUtil.getTinyValuables()) {
+            foreach (KeyValuePair<string, PrefabRef> entry in ValuableUtil.getTinyValuables()) {
                 addButton(valuablesTinyMenu, entry.Key, () => ValuableUtil.spawnValuable(entry.Value));
             }
 
@@ -341,7 +341,7 @@ namespace RepoAdminMenu {
         private static void openSpawnValuablesSmallMenu() {
             var valuablesSmallMenu = createMenu("R.A.M. - Small Valuables", "spawnValuableSmall", "spawnValuable");
 
-            foreach (KeyValuePair<string, GameObject> entry in ValuableUtil.getSmallValuables()) {
+            foreach (KeyValuePair<string, PrefabRef> entry in ValuableUtil.getSmallValuables()) {
                 addButton(valuablesSmallMenu, entry.Key, () => ValuableUtil.spawnValuable(entry.Value));
             }
 
@@ -351,7 +351,7 @@ namespace RepoAdminMenu {
         private static void openSpawnValuablesMediumMenu() {
             var valuablesMediumMenu = createMenu("R.A.M. - Medium Valuables", "spawnValuableMedium", "spawnValuable");
 
-            foreach (KeyValuePair<string, GameObject> entry in ValuableUtil.getMediumValuables()) {
+            foreach (KeyValuePair<string, PrefabRef> entry in ValuableUtil.getMediumValuables()) {
                 addButton(valuablesMediumMenu, entry.Key, () => ValuableUtil.spawnValuable(entry.Value));
             }
 
@@ -361,7 +361,7 @@ namespace RepoAdminMenu {
         private static void openSpawnValuablesBigMenu() {
             var valuablesBigMenu = createMenu("R.A.M. - Big Valuables", "spawnValuableBig", "spawnValuable");
 
-            foreach (KeyValuePair<string, GameObject> entry in ValuableUtil.getBigValuables()) {
+            foreach (KeyValuePair<string, PrefabRef> entry in ValuableUtil.getBigValuables()) {
                 addButton(valuablesBigMenu, entry.Key, () => ValuableUtil.spawnValuable(entry.Value));
             }
 
@@ -371,7 +371,7 @@ namespace RepoAdminMenu {
         private static void openSpawnValuablesWideMenu() {
             var valuablesWideMenu = createMenu("R.A.M. - Wide Valuables", "spawnValuableWide", "spawnValuable");
 
-            foreach (KeyValuePair<string, GameObject> entry in ValuableUtil.getWideValuables()) {
+            foreach (KeyValuePair<string, PrefabRef> entry in ValuableUtil.getWideValuables()) {
                 addButton(valuablesWideMenu, entry.Key, () => ValuableUtil.spawnValuable(entry.Value));
             }
 
@@ -381,7 +381,7 @@ namespace RepoAdminMenu {
         private static void openSpawnValuablesTallMenu() {
             var valuablesTallMenu = createMenu("R.A.M. - Tall Valuables", "spawnValuableTall", "spawnValuable");
 
-            foreach (KeyValuePair<string, GameObject> entry in ValuableUtil.getTallValuables()) {
+            foreach (KeyValuePair<string, PrefabRef> entry in ValuableUtil.getTallValuables()) {
                 addButton(valuablesTallMenu, entry.Key, () => ValuableUtil.spawnValuable(entry.Value));
             }
 
@@ -391,7 +391,7 @@ namespace RepoAdminMenu {
         private static void openSpawnValuablesVeryTallMenu() {
             var valuablesVeryTallMenu = createMenu("R.A.M. - Very Tall Valuables", "spawnValuableVeryTall", "spawnValuable");
 
-            foreach (KeyValuePair<string, GameObject> entry in ValuableUtil.getVeryTallValuables()) {
+            foreach (KeyValuePair<string, PrefabRef> entry in ValuableUtil.getVeryTallValuables()) {
                 addButton(valuablesVeryTallMenu, entry.Key, () => ValuableUtil.spawnValuable(entry.Value));
             }
 

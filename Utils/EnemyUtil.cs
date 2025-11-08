@@ -144,7 +144,7 @@ namespace RepoAdminMenu.Utils {
             } else {
                 EnemyParentPatch.spawning = true;
                 LevelGenerator.Instance.EnemiesSpawned = -1;
-                GameObject obj = UnityEngine.Object.Instantiate(enemySetup.spawnObjects[0], position, Quaternion.identity);
+                GameObject obj = UnityEngine.Object.Instantiate(enemySetup.spawnObjects[0].Prefab, position, Quaternion.identity);
                 EnemyParent parent = obj.GetComponent<EnemyParent>();
                 if (parent != null) {
                     parent.SetupDone = true;
