@@ -6,6 +6,30 @@ using UnityEngine;
 
 namespace RepoAdminMenu.Utils {
     internal class EnemyUtil {
+        
+        private static readonly Dictionary<string, string> EntityNames =
+            new ()
+            {
+                { "Ceiling Eye", "Peeper" },
+                { "Thin Man", "Shadow Child" },
+                { "Gnome", "Gnome" },
+                { "Duck", "Apex Predator" },
+                { "Slow Mouth", "Spewer" },
+                { "Valuable Thrower", "Rugrat" },
+                { "Animal", "Animal" },
+                { "Upscream", "Upscream" },
+                { "Hidden", "Hidden" },
+                { "Tumbler", "Chef" },
+                { "Bowtie", "Bowtie" },
+                { "Floater", "Mentalist" },
+                { "Bang", "Bang" },
+                { "Head", "Headman" },
+                { "Robe", "Robe" },
+                { "Hunter", "Huntsman" },
+                { "Runner", "Reaper" },
+                { "Beamer", "Clown" },
+                { "Slow Walker", "Trudge" },
+            };
 
         private static SortedDictionary<string, EnemySetup> enemySetups = new SortedDictionary<string, EnemySetup>();
         private static SortedDictionary<string, EnemySetup> modEnemySetups = new SortedDictionary<string, EnemySetup>();
@@ -26,69 +50,9 @@ namespace RepoAdminMenu.Utils {
                     continue;
 
                 string name = setup.name.Replace("Enemy - ", string.Empty);
-                switch (name) {
-                    case "Ceiling Eye":
-                        addEnemySetupSafe("Peeper", setup);
-                        break;
-                    case "Thin Man":
-                        addEnemySetupSafe("Shadow Child", setup);
-                        break;
-                    case "Gnome":
-                        addEnemySetupSafe("Gnome", setup);
-                        break;
-                    case "Duck":
-                        addEnemySetupSafe("Apex Predator", setup);
-                        break;
-                    case "Slow Mouth":
-                        addEnemySetupSafe("Spewer", setup);
-                        break;
-                    case "Valuable Thrower":
-                        addEnemySetupSafe("Rugrat", setup);
-                        break;
-                    case "Animal":
-                        addEnemySetupSafe("Animal", setup);
-                        break;
-                    case "Upscream":
-                        addEnemySetupSafe("Upscream", setup);
-                        break;
-                    case "Hidden":
-                        addEnemySetupSafe("Hidden", setup);
-                        break;
-                    case "Tumbler":
-                        addEnemySetupSafe("Chef", setup);
-                        break;
-                    case "Bowtie":
-                        addEnemySetupSafe("Bowtie", setup);
-                        break;
-                    case "Floater":
-                        addEnemySetupSafe("Mentalist", setup);
-                        break;
-                    case "Bang":
-                        addEnemySetupSafe("Bang", setup);
-                        break;
-                    case "Head":
-                        addEnemySetupSafe("Headman", setup);
-                        break;
-                    case "Robe":
-                        addEnemySetupSafe("Robe", setup);
-                        break;
-                    case "Hunter":
-                        addEnemySetupSafe("Huntsman", setup);
-                        break;
-                    case "Runner":
-                        addEnemySetupSafe("Reaper", setup);
-                        break;
-                    case "Beamer":
-                        addEnemySetupSafe("Clown", setup);
-                        break;
-                    case "Slow Walker":
-                        addEnemySetupSafe("Trudge", setup);
-                        break;
-                    default:
-                        addModEnemySetupSafe(name, setup);
-                        break;
-
-                }
+                if (EntityNames.TryGetValue(name, out var value))
+                    addEnemySetupSafe(value, setup);
+                else addModEnemySetupSafe(name, setup);
             }
         }
 
