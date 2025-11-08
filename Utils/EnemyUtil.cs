@@ -29,6 +29,16 @@ namespace RepoAdminMenu.Utils {
                 { "Runner", "Reaper" },
                 { "Beamer", "Clown" },
                 { "Slow Walker", "Trudge" },
+                { "Elsa", "Elsa" },
+                { "Oogly", "Oogly" },
+                { "Shadow", "Loom" },
+                { "Heart Hugger", "Heart Hugger" },
+                { "Birthday Boy", "Birthday Boy" },
+                { "Tick", "Tick" },
+                { "Tricycle", "Bella" },
+                { "Head Grabber", "Headgrab" },
+                { "Spinny", "Gambit" },
+                { "Bomb Thrower", "Cleanup Crew" },
             };
 
         private static SortedDictionary<string, EnemySetup> enemySetups = new SortedDictionary<string, EnemySetup>();
