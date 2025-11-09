@@ -61,27 +61,27 @@ namespace RepoAdminMenu.Utils {
             string steamId = SemiFunc.PlayerGetSteamID(avatar);
             RepoAdminMenu.mls.LogInfo("DoImmediateUpgrade: " + SemiFunc.PlayerGetName(avatar) + " - '" + key + "'");
             if (key.Equals("playerUpgradeHealth")) {
-                PunManager.instance.UpdateHealthRightAway(steamId);
+                PunManager.instance.UpdateHealthRightAway(steamId, 1);
             } else if (key.Equals("playerUpgradeStamina")) {
-                PunManager.instance.UpdateEnergyRightAway(steamId);
+                PunManager.instance.UpdateEnergyRightAway(steamId, 1);
             } else if (key.Equals("playerUpgradeExtraJump")) {
-                PunManager.instance.UpdateExtraJumpRightAway(steamId);
+                PunManager.instance.UpdateExtraJumpRightAway(steamId, 1);
             } else if (key.Equals("playerUpgradeLaunch")) {
-                PunManager.instance.UpdateTumbleLaunchRightAway(steamId);
+                PunManager.instance.UpdateTumbleLaunchRightAway(steamId, 1);
             } else if (key.Equals("playerUpgradeMapPlayerCount")) {
-                PunManager.instance.UpdateMapPlayerCountRightAway(steamId);
+                PunManager.instance.UpdateMapPlayerCountRightAway(steamId, 1);
             } else if (key.Equals("playerUpgradeSpeed")) {
-                PunManager.instance.UpdateSprintSpeedRightAway(steamId);
+                PunManager.instance.UpdateSprintSpeedRightAway(steamId, 1);
             } else if (key.Equals("playerUpgradeStrength")) {
-                PunManager.instance.UpdateGrabStrengthRightAway(steamId);
+                PunManager.instance.UpdateGrabStrengthRightAway(steamId, 1);
             } else if (key.Equals("playerUpgradeRange")) {
-                PunManager.instance.UpdateGrabRangeRightAway(steamId);
+                PunManager.instance.UpdateGrabRangeRightAway(steamId, 1);
             } else if (key.Equals("playerUpgradeThrow")) {
-                PunManager.instance.UpdateThrowStrengthRightAway(steamId);
+                PunManager.instance.UpdateThrowStrengthRightAway(steamId, 1);
             } else if (key.Equals("playerUpgradeCrouchRest")) {
-                PunManager.instance.UpdateCrouchRestRightAway(steamId);
+                PunManager.instance.UpdateCrouchRestRightAway(steamId, 1);
             } else if (key.Equals("playerUpgradeTumbleWings")) {
-                PunManager.instance.UpdateTumbleWingsRightAway(steamId);
+                PunManager.instance.UpdateTumbleWingsRightAway(steamId, 1);
             }
         }
 
