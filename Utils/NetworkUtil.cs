@@ -1,7 +1,6 @@
 ﻿using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace RepoAdminMenu.Utils {
@@ -132,7 +131,7 @@ namespace RepoAdminMenu.Utils {
 
                     switch (cmd) {
                         case "UpgradeSync":
-                            PlayerUtil.upgradeSync(player, args[2].ToString(), (int) args[3]);
+                            UpgradeUtil.UpgradeSync(player, args[2].ToString(), (int) args[3]);
                             break;
                         default:
                             RepoAdminMenu.mls.LogWarning("Unknown command(" + args.Length + "): " + cmd);

@@ -9,22 +9,22 @@ Command can be disabled and the keybind can be remapped using the config.
 ## Image Previews
 
 #### Main Menu
-[![Main Menu](https://imgur.com/uvksHg5.png)]()
+[![Main Menu](https://i.imgur.com/1Q7Sr6r.png)]()
 
 #### Player Menu Top
-[![Player Menu](https://imgur.com/ybgCe01.png)]()
+[![Player Menu](https://i.imgur.com/85IvvYJ.jpeg)]()
 
 #### Player Menu Bottom
-[![Player Menu](https://imgur.com/lKakcua.png)]()
+[![Player Menu](https://i.imgur.com/wRUiVeO.jpeg)]()
 
 #### Player Upgrade Menu
-[![Player Menu](https://imgur.com/o5Pjs2A.png)]()
+[![Player Menu](https://i.imgur.com/O1lTKA4.jpeg)]()
 
 #### Spawning Menu
-[![Player Menu](https://imgur.com/0qLOpAb.png)]()
+[![Player Menu](https://i.imgur.com/hZHuAah.png)]()
 
 #### Map Menu
-[![Player Menu](https://imgur.com/VUP1kgt.png)]()
+[![Player Menu](https://i.imgur.com/YiNAh7P.jpeg)]()
 
 #### Settings Menu
-[![Player Menu](https://imgur.com/hDOMR7K.png)]()
+[![Player Menu](https://i.imgur.com/xrj0ejF.jpeg)]()

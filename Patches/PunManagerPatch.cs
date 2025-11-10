@@ -114,5 +114,25 @@ namespace RepoAdminMenu.Patches {
             return false;
         }
 
+        [HarmonyPatch(nameof(PunManager.UpdateDeathHeadBatteryRightAway))]
+        [HarmonyPrefix]
+        private static bool Prefix_UpdateDeathHeadBatteryRightAway(ref string _steamID) {
+            PlayerAvatar playerAvatar = SemiFunc.PlayerAvatarGetFromSteamID(_steamID);
+            if (playerAvatar) {
+                playerAvatar.upgradeDeathHeadBattery = StatsManager.instance.playerUpgradeDeathHeadBattery[_steamID];
+            }
+            return false;
+        }
+
+        [HarmonyPatch(nameof(PunManager.UpdateTumbleClimbRightAway))]
+        [HarmonyPrefix]
+        private static bool Prefix_UpdateTumbleClimbRightAway(ref string _steamID) {
+            PlayerAvatar playerAvatar = SemiFunc.PlayerAvatarGetFromSteamID(_steamID);
+            if (playerAvatar) {
+                playerAvatar.upgradeTumbleClimb = StatsManager.instance.playerUpgradeTumbleClimb[_steamID];
+            }
+            return false;
+        }
+
     }
 }

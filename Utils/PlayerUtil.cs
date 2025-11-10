@@ -1,7 +1,5 @@
 ﻿using Photon.Pun;
-using Photon.Realtime;
 using System;
-using System.Collections.Generic;
 
 namespace RepoAdminMenu.Utils {
     internal class PlayerUtil {
@@ -29,75 +27,6 @@ namespace RepoAdminMenu.Utils {
             PlayerHealth health = avatar.playerHealth;
             avatar.playerHealth.HealOther(health.maxHealth, true);
             RepoAdminMenu.mls.LogInfo(SemiFunc.PlayerGetName(avatar) + " Healed!");
-        }
-
-        public static void upgrade(PlayerAvatar avatar, string key, int level) {
-            RepoAdminMenu.mls.LogInfo("Upgrade: " + SemiFunc.PlayerGetName(avatar) + " - '" + key + "' -> " + level);
-            NetworkUtil.SendCommandSteamIDStringInt("UpgradeSync", avatar.steamID, key, level, ReceiverGroup.All);
-        }
-
-        public static void upgradeSync(PlayerAvatar avatar, string key, int level) {
-            RepoAdminMenu.mls.LogInfo("UpgradeSync: " + SemiFunc.PlayerGetName(avatar) + " - '" + key + "' -> " + level);
-            string steamId = SemiFunc.PlayerGetSteamID(avatar);
-            Dictionary<string, Dictionary<string, int>> dicts = StatsManager.instance.dictionaryOfDictionaries;
-
-            if (!dicts.ContainsKey(key)) {
-                dicts.Add(key, new Dictionary<string, int>());
-            }
-
-            Dictionary<string, int> dict = new Dictionary<string, int>();
-
-            if (dicts.TryGetValue(key, out dict)) {
-                dict[steamId] = level;
-            }
-
-            // process upgrade locally
-            if (avatar == PlayerAvatar.instance) {
-                DoImmediateUpgrade(avatar, key, level);
-            }
-        }
-
-        public static void DoImmediateUpgrade(PlayerAvatar avatar, string key, int level) {
-            string steamId = SemiFunc.PlayerGetSteamID(avatar);
-            RepoAdminMenu.mls.LogInfo("DoImmediateUpgrade: " + SemiFunc.PlayerGetName(avatar) + " - '" + key + "'");
-            if (key.Equals("playerUpgradeHealth")) {
-                PunManager.instance.UpdateHealthRightAway(steamId, level);
-            } else if (key.Equals("playerUpgradeStamina")) {
-                PunManager.instance.UpdateEnergyRightAway(steamId, level);
-            } else if (key.Equals("playerUpgradeExtraJump")) {
-                PunManager.instance.UpdateExtraJumpRightAway(steamId, level);
-            } else if (key.Equals("playerUpgradeLaunch")) {
-                PunManager.instance.UpdateTumbleLaunchRightAway(steamId, level);
-            } else if (key.Equals("playerUpgradeMapPlayerCount")) {
-                PunManager.instance.UpdateMapPlayerCountRightAway(steamId, level);
-            } else if (key.Equals("playerUpgradeSpeed")) {
-                PunManager.instance.UpdateSprintSpeedRightAway(steamId, level);
-            } else if (key.Equals("playerUpgradeStrength")) {
-                PunManager.instance.UpdateGrabStrengthRightAway(steamId, level);
-            } else if (key.Equals("playerUpgradeRange")) {
-                PunManager.instance.UpdateGrabRangeRightAway(steamId, level);
-            } else if (key.Equals("playerUpgradeThrow")) {
-                PunManager.instance.UpdateThrowStrengthRightAway(steamId, level);
-            } else if (key.Equals("playerUpgradeCrouchRest")) {
-                PunManager.instance.UpdateCrouchRestRightAway(steamId, level);
-            } else if (key.Equals("playerUpgradeTumbleWings")) {
-                PunManager.instance.UpdateTumbleWingsRightAway(steamId, level);
-            }
-        }
-
-        public static int getUpgradeLevel(string type, PlayerAvatar avatar) {
-            StatsManager statsManager = StatsManager.instance;
-            string playerSteamId = SemiFunc.PlayerGetSteamID(avatar);
-
-            if (statsManager != null) {
-                if (statsManager.dictionaryOfDictionaries.ContainsKey(type)) {
-                    Dictionary<string, int> upgradeType = statsManager.dictionaryOfDictionaries[type];
-                    if (upgradeType != null && upgradeType.ContainsKey(playerSteamId)) {
-                        return upgradeType[playerSteamId];
-                    }
-                }
-            }
-            return 0;
         }
 
         public static void giveCrown(PlayerAvatar avatar) {

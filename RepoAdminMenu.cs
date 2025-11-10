@@ -11,7 +11,7 @@ namespace RepoAdminMenu {
 
         private const string mod_guid = "proferabg.REPO.RepoAdminMenu";
         private const string mod_name = "Repo Admin Menu";
-        private const string mod_version = "1.0.13";
+        private const string mod_version = "1.0.14";
 
         private static RepoAdminMenu _plugin;
 

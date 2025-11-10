@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.14](https://github.com/proferabg/RepoAdminMenu/releases/tag/1.0.14)
+
+* Add in missing player upgrades from Repo v0.3.0 update
+
 ## [1.0.13](https://github.com/proferabg/RepoAdminMenu/releases/tag/1.0.13)
 
 * Updated for R.E.P.O. v0.3.0

@@ -272,21 +272,12 @@ namespace RepoAdminMenu {
 
             var upgradesMenu = createMenu("R.A.M. - " + SemiFunc.PlayerGetName(avatar) + " - Upgrades", "playerUpgrade", "player");
 
-            addIntSlider(upgradesMenu, "Crouch Rest", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeCrouchRest", v); PunManager.instance.UpdateCrouchRestRightAway(selectedPlayerId, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeCrouchRest", avatar));
-            addIntSlider(upgradesMenu, "Health", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeHealth", v); PunManager.instance.UpdateHealthRightAway(selectedPlayerId, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeHealth", avatar));
-            addIntSlider(upgradesMenu, "Jump", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeExtraJump", v); PunManager.instance.UpdateExtraJumpRightAway(selectedPlayerId, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeExtraJump", avatar));
-            addIntSlider(upgradesMenu, "Launch", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeLaunch", v); PunManager.instance.UpdateTumbleLaunchRightAway(selectedPlayerId, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeLaunch", avatar));
-            addIntSlider(upgradesMenu, "Map Player Count", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeMapPlayerCount", v); PunManager.instance.UpdateMapPlayerCountRightAway(selectedPlayerId, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeMapPlayerCount", avatar));
-            addIntSlider(upgradesMenu, "Range", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeRange", v); PunManager.instance.UpdateGrabRangeRightAway(selectedPlayerId, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeRange", avatar));
-            addIntSlider(upgradesMenu, "Speed", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeSpeed", v); PunManager.instance.UpdateSprintSpeedRightAway(selectedPlayerId, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeSpeed", avatar));
-            addIntSlider(upgradesMenu, "Stamina", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeStamina", v); PunManager.instance.UpdateEnergyRightAway(selectedPlayerId, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeStamina", avatar));
-            addIntSlider(upgradesMenu, "Strength", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeStrength", v); PunManager.instance.UpdateGrabStrengthRightAway(selectedPlayerId, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeStrength", avatar));
-            addIntSlider(upgradesMenu, "Throw", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeThrow", v); PunManager.instance.UpdateThrowStrengthRightAway(selectedPlayerId, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeThrow", avatar));
-            addIntSlider(upgradesMenu, "Tumble Wings", "", (v) => { PlayerUtil.upgrade(avatar, "playerUpgradeTumbleWings", v); PunManager.instance.UpdateTumbleWingsRightAway(selectedPlayerId, v); }, 0, Configuration.MaxUpgradeLevel.Value, PlayerUtil.getUpgradeLevel("playerUpgradeTumbleWings", avatar));
+            foreach(KeyValuePair<string, UpgradeUtil.GameUpgrade> upgradePair in UpgradeUtil.GetGameUpgrades()) {
+                addIntSlider(upgradesMenu, upgradePair.Value.GetName(), "", (v) => { upgradePair.Value.Upgrade(avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, upgradePair.Value.GetPlayerLevel(avatar));
+            }
 
-            foreach (KeyValuePair<string, PlayerUpgrade> upgradePair in UpgradeUtil.getUpgrades()) {
-                PlayerUpgrade upgrade = upgradePair.Value;
-                addIntSlider(upgradesMenu, "(Mod) " + upgradePair.Key, "", (v) => { UpgradeUtil.UpgradeLevel(upgrade, avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, upgrade.GetLevel(avatar));
+            foreach (KeyValuePair<string, PlayerUpgrade> upgradePair in UpgradeUtil.GetModUpgrades()) {
+                addIntSlider(upgradesMenu, "(Mod) " + upgradePair.Key, "", (v) => { UpgradeUtil.UpgradeLevel(upgradePair.Value, avatar, v); }, 0, Configuration.MaxUpgradeLevel.Value, upgradePair.Value.GetLevel(avatar));
             }
 
 
