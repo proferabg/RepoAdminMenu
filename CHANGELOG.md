@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.15](https://github.com/proferabg/RepoAdminMenu/releases/tag/1.0.15)
+
+* Fix upgrades not working in single-player
+* Fix no-target breaking Bella's animations (states)
+
 ## [1.0.14](https://github.com/proferabg/RepoAdminMenu/releases/tag/1.0.14)
 
 * Add in missing player upgrades from Repo v0.3.0 update
