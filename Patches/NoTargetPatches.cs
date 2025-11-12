@@ -1,9 +1,21 @@
 ﻿using HarmonyLib;
+using System.Collections.Generic;
 
 namespace RepoAdminMenu.Patches {
 
     [HarmonyPatch]
     internal class NoTargetPatches {
+
+        [HarmonyPatch(typeof(SemiFunc), "PlayerGetAllPlayerAvatarWithinRange")]
+        [HarmonyPostfix]
+        private static void SemiFunc_PlayerGetAllPlayerAvatarWithinRange_Postfix(ref List<PlayerAvatar> __result) {
+            List<PlayerAvatar> newList = new List<PlayerAvatar>();
+            foreach (PlayerAvatar avatar in __result) {
+                if(!Settings.isNoTarget(avatar))
+                    newList.Add(avatar);
+            }
+            __result = newList;
+        }
 
         [HarmonyPatch(typeof(Enemy), "SetChaseTarget")]
         [HarmonyPrefix]
@@ -319,12 +331,35 @@ namespace RepoAdminMenu.Patches {
             }
         }
 
-        [HarmonyPatch(typeof(EnemyTricycle), "StateMachine")]
+        [HarmonyPatch(typeof(EnemyTricycle), "SetState")]
         [HarmonyPrefix]
-        private static bool EnemyTricycle_StateMachine_Prefix(Enemy __instance, ref PlayerAvatar ___playerTarget, ref EnemyTricycle.State ___currentState) {
+        private static void EnemyTricycle_SetState_Prefix(Enemy __instance, ref PlayerAvatar ___playerTarget, ref PlayerAvatar ___isBlockedByPlayerAvatar, ref EnemyTricycle.State newState) {
+            if (___playerTarget != null && Settings.isNoTarget(___playerTarget)) {
+                ___playerTarget = null;
+                newState = EnemyTricycle.State.Roam;
+            }
+            if (___isBlockedByPlayerAvatar != null && Settings.isNoTarget(___isBlockedByPlayerAvatar)) {
+                ___isBlockedByPlayerAvatar = null;
+                newState = EnemyTricycle.State.Roam;
+            }
+        }
+
+        [HarmonyPatch(typeof(EnemyTricycle), "StateAttack")]
+        [HarmonyPrefix]
+        private static bool EnemyTricycle_StateAttack_Prefix(EnemyTricycle __instance, ref PlayerAvatar ___playerTarget) {
             if (___playerTarget == null || Settings.isNoTarget(___playerTarget)) {
                 ___playerTarget = null;
-                ___currentState = EnemyTricycle.State.Roam;
+                __instance.SetState(EnemyTricycle.State.AttackOutro);
+                return false;
+            }
+            return true;
+        }
+
+        [HarmonyPatch(typeof(EnemyTricycle), "OnGrabbed")]
+        [HarmonyPrefix]
+        private static bool EnemyTricycle_OnGrabbed_Prefix(EnemyTricycle __instance) {
+            if(__instance.enemy.Rigidbody != null && __instance.enemy.Rigidbody.onGrabbedPlayerAvatar != null && 
+                Settings.isNoTarget(__instance.enemy.Rigidbody.onGrabbedPlayerAvatar)) {
                 return false;
             }
             return true;

@@ -116,7 +116,11 @@ namespace RepoAdminMenu.Utils {
 
             public void Upgrade(PlayerAvatar avatar, int level) {
                 RepoAdminMenu.mls.LogInfo("Upgrade: " + SemiFunc.PlayerGetName(avatar) + " - '" + id + "' -> " + level);
-                NetworkUtil.SendCommandSteamIDStringInt("UpgradeSync", avatar.steamID, id, level, ReceiverGroup.All);
+                if (SemiFunc.IsMultiplayer()) {
+                    NetworkUtil.SendCommandSteamIDStringInt("UpgradeSync", avatar.steamID, id, level, ReceiverGroup.All);
+                } else {
+                    UpgradeSync(avatar, id, level);
+                }
             }
 
             public void PunUpgrade(PlayerAvatar avatar, int level) {
