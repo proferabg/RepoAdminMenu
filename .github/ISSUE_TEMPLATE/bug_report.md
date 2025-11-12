@@ -10,6 +10,9 @@ assignees: ''
 ## **Describe the bug (Required)**
 A clear and concise description of what the bug is.
  
+## **Single-player or Multi-Player (Required)**
+single-player/multi-player
+
 ## **Steps To Reproduce (Required)**
 Steps to reproduce the behavior:
 1. Go to '...'
