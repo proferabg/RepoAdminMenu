@@ -119,7 +119,6 @@ namespace RepoAdminMenu.Utils {
                 Enemies.SpawnEnemy(enemySetup, position, Quaternion.identity, spawnDespawned: false);
             } else {
                 EnemyParentPatch.spawning = true;
-                LevelGenerator.Instance.EnemiesSpawned = -1;
                 GameObject obj = UnityEngine.Object.Instantiate(enemySetup.spawnObjects[0].Prefab, position, Quaternion.identity);
                 EnemyParent parent = obj.GetComponent<EnemyParent>();
                 if (parent != null) {
