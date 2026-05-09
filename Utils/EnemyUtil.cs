@@ -125,10 +125,6 @@ namespace RepoAdminMenu.Utils {
                     parent.SetupDone = true;
                     obj.GetComponentInChildren<Enemy>().EnemyTeleported(position);
                     EnemyDirector.instance.FirstSpawnPointAdd(parent);
-                    EnemyDirector.instance.enemiesSpawned.Add(parent);
-                    foreach (PlayerAvatar player in SemiFunc.PlayerGetAll()) {
-                        parent.Enemy.PlayerAdded(player.photonView.ViewID);
-                    }
                 }
             }
         }
