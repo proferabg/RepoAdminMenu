@@ -1,5 +1,7 @@
 ﻿using HarmonyLib;
+using RepoAdminMenu.Utils;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace RepoAdminMenu.Patches {
 
@@ -182,16 +184,19 @@ namespace RepoAdminMenu.Patches {
         [HarmonyPatch(typeof(EnemyHunter), "Update")]
         [HarmonyPrefix]
         private static void EnemyHunter_Update_Prefix(EnemyHunter __instance) {
-            if(__instance.enemy.Rigidbody != null) {
-                EnemyRigidbody rigidbody = __instance.enemy.Rigidbody;
-                if (rigidbody.onTouchPlayerAvatar != null && Settings.isNoTarget(rigidbody.onTouchPlayerAvatar)) {
-                    rigidbody.onTouchPlayerAvatar = null;
-                    __instance.UpdateState(EnemyHunter.State.Roam);
-
+            EnemyRigidbody rigidbody = __instance.GetComponent<EnemyRigidbody>();
+            if (rigidbody != null) {
+                PlayerAvatar touchAvatar = ReflectionUtil.GetFieldValue<PlayerAvatar>(rigidbody, "onTouchPlayerAvatar");
+                if (touchAvatar != null && Settings.isNoTarget(touchAvatar)) {
+                    ReflectionUtil.SetFieldValue(rigidbody, "onTouchPlayerAvatar", null);
+                    ReflectionUtil.SetFieldValue(__instance, "currentState", EnemyHunter.State.Roam);
+                    ReflectionUtil.SetFieldValue(__instance, "stateImpulse", Time.time);
                 }
-                if(rigidbody.onGrabbedPlayerAvatar != null && Settings.isNoTarget(rigidbody.onGrabbedPlayerAvatar)) {
-                    rigidbody.onGrabbedPlayerAvatar = null;
-                    __instance.UpdateState(EnemyHunter.State.Roam);
+                PlayerAvatar grabbedAvatar = ReflectionUtil.GetFieldValue<PlayerAvatar>(rigidbody, "onGrabbedPlayerAvatar");
+                if (grabbedAvatar != null && Settings.isNoTarget(grabbedAvatar)) {
+                    ReflectionUtil.SetFieldValue(rigidbody, "onGrabbedPlayerAvatar", null);
+                    ReflectionUtil.SetFieldValue(__instance, "currentState", EnemyHunter.State.Roam);
+                    ReflectionUtil.SetFieldValue(__instance, "stateImpulse", Time.time);
                 }
             }
         }
@@ -201,10 +206,11 @@ namespace RepoAdminMenu.Patches {
         private static bool EnemyHunter_UpdateState_Prefix(EnemyHunter __instance, EnemyHunter.State _state) {
             if(_state == EnemyHunter.State.Aim) {
                 foreach (PlayerAvatar player in SemiFunc.PlayerGetAll()) {
-                    if (Settings.isNoTarget(player) && __instance.investigatePointTransform != null &&
+                    if (Settings.isNoTarget(player) && __instance.investigateRayTransform != null &&
                         player.PlayerVisionTarget != null && player.PlayerVisionTarget.VisionTransform != null &&
-                        __instance.investigatePointTransform == player.PlayerVisionTarget.VisionTransform) {
-                        __instance.currentState = EnemyHunter.State.Roam;
+                        __instance.investigateRayTransform == player.PlayerVisionTarget.VisionTransform) {
+                        ReflectionUtil.SetFieldValue(__instance, "currentState", EnemyHunter.State.Roam);
+                        ReflectionUtil.SetFieldValue(__instance, "stateImpulse", Time.time);
                         return false;
                     }
                 }
@@ -257,7 +263,8 @@ namespace RepoAdminMenu.Patches {
         private static void EnemyShadow_Update_Prefix(EnemyShadow __instance, ref PlayerAvatar ___playerTarget) {
             if (___playerTarget != null && Settings.isNoTarget(___playerTarget)) {
                 ___playerTarget = null;
-                __instance.UpdateState(EnemyShadow.State.ChooseTarget);
+                ReflectionUtil.SetFieldValue(__instance, "currentState", EnemyShadow.State.ChooseTarget);
+                ReflectionUtil.SetFieldValue(__instance, "stateImpulse", Time.time);
             }
         }
 
@@ -349,7 +356,8 @@ namespace RepoAdminMenu.Patches {
         private static bool EnemyTricycle_StateAttack_Prefix(EnemyTricycle __instance, ref PlayerAvatar ___playerTarget) {
             if (___playerTarget == null || Settings.isNoTarget(___playerTarget)) {
                 ___playerTarget = null;
-                __instance.SetState(EnemyTricycle.State.AttackOutro);
+                ReflectionUtil.SetFieldValue(__instance, "currentState", EnemyTricycle.State.AttackOutro);
+                ReflectionUtil.SetFieldValue(__instance, "stateImpulse", Time.time);
                 return false;
             }
             return true;
@@ -358,9 +366,12 @@ namespace RepoAdminMenu.Patches {
         [HarmonyPatch(typeof(EnemyTricycle), "OnGrabbed")]
         [HarmonyPrefix]
         private static bool EnemyTricycle_OnGrabbed_Prefix(EnemyTricycle __instance) {
-            if(__instance.enemy.Rigidbody != null && __instance.enemy.Rigidbody.onGrabbedPlayerAvatar != null && 
-                Settings.isNoTarget(__instance.enemy.Rigidbody.onGrabbedPlayerAvatar)) {
-                return false;
+            EnemyRigidbody rigidbody = __instance.GetComponent<EnemyRigidbody>();
+            if (rigidbody != null) {
+                PlayerAvatar grabbedAvatar = ReflectionUtil.GetFieldValue<PlayerAvatar>(rigidbody, "onGrabbedPlayerAvatar");
+                if (grabbedAvatar != null && Settings.isNoTarget(grabbedAvatar)) {
+                    return false;
+                }
             }
             return true;
         }

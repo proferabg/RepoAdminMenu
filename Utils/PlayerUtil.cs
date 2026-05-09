@@ -1,5 +1,6 @@
 ﻿using Photon.Pun;
 using System;
+using RepoAdminMenu.Utils;
 
 namespace RepoAdminMenu.Utils {
     internal class PlayerUtil {
@@ -12,11 +13,11 @@ namespace RepoAdminMenu.Utils {
         }
 
         public static void revivePlayer(PlayerAvatar avatar) {
-            if (avatar.deadSet && avatar.playerDeathHead != null) {
-                PlayerDeathHead playerDeathHead = avatar.playerDeathHead;
-                playerDeathHead.inExtractionPoint = true;
+            if (ReflectionUtil.PlayerAvatar_GetDeadSet(avatar) && ReflectionUtil.PlayerAvatar_GetDeathHead(avatar) != null) {
+                PlayerDeathHead playerDeathHead = ReflectionUtil.PlayerAvatar_GetDeathHead(avatar);
+                ReflectionUtil.PlayerDeathHead_SetInExtractionPoint(playerDeathHead, true);
                 avatar.Revive();
-                playerDeathHead.inExtractionPoint = false;
+                ReflectionUtil.PlayerDeathHead_SetInExtractionPoint(playerDeathHead, false);
                 RepoAdminMenu.mls.LogInfo(SemiFunc.PlayerGetName(avatar) + " Revived!");
             } else {
                 RepoAdminMenu.mls.LogInfo(SemiFunc.PlayerGetName(avatar) + " is not dead. Cannot be revived!");
@@ -25,7 +26,7 @@ namespace RepoAdminMenu.Utils {
 
         public static void healPlayer(PlayerAvatar avatar) {
             PlayerHealth health = avatar.playerHealth;
-            avatar.playerHealth.HealOther(health.maxHealth, true);
+            avatar.playerHealth.HealOther(ReflectionUtil.PlayerHealth_GetMaxHealth(health), true);
             RepoAdminMenu.mls.LogInfo(SemiFunc.PlayerGetName(avatar) + " Healed!");
         }
 
@@ -49,9 +50,9 @@ namespace RepoAdminMenu.Utils {
         private static void teleport(PlayerAvatar from, PlayerAvatar to) {
             UnityEngine.Vector3 pos = to.transform.position;
             UnityEngine.Quaternion rot = to.transform.rotation;
-            if (to.deadSet) {
-                pos = to.playerDeathHead.physGrabObject.transform.position;
-                rot = to.playerDeathHead.physGrabObject.transform.rotation;
+            if (ReflectionUtil.PlayerAvatar_GetDeadSet(to)) {
+                pos = ReflectionUtil.GetFieldValue<PhysGrabObject>(ReflectionUtil.PlayerAvatar_GetDeathHead(to), "physGrabObject").transform.position;
+                rot = ReflectionUtil.GetFieldValue<PhysGrabObject>(ReflectionUtil.PlayerAvatar_GetDeathHead(to), "physGrabObject").transform.rotation;
             }
             teleport(from, pos, rot);
         }
@@ -60,8 +61,8 @@ namespace RepoAdminMenu.Utils {
             if (!SemiFunc.IsMultiplayer()) {
                 from.Spawn(pos, rot);
             } else if (from.photonView != null) {
-                if (from.deadSet) {
-                    from.playerDeathHead.physGrabObject.Teleport(pos, rot);
+                if (ReflectionUtil.PlayerAvatar_GetDeadSet(from)) {
+                    ReflectionUtil.GetFieldValue<PhysGrabObject>(ReflectionUtil.PlayerAvatar_GetDeathHead(from), "physGrabObject").Teleport(pos, rot);
                 } else {
                     from.photonView.RPC("SpawnRPC", RpcTarget.All, new object[] { pos, rot });
                 }

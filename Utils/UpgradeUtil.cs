@@ -1,8 +1,10 @@
-﻿using Photon.Realtime;
+﻿using HarmonyLib;
+using Photon.Realtime;
 using REPOLib.Modules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace RepoAdminMenu.Utils {
@@ -10,20 +12,33 @@ namespace RepoAdminMenu.Utils {
 
         private static SortedDictionary<string, PlayerUpgrade> modUpgrades = new SortedDictionary<string, PlayerUpgrade>();
         private static SortedDictionary<string, GameUpgrade> gameUpgrades = new SortedDictionary<string, GameUpgrade>() {
-            { "playerUpgradeCrouchRest", new GameUpgrade("playerUpgradeCrouchRest", "Crouch Rest", PunManager.instance.UpdateCrouchRestRightAway) },
-            { "playerUpgradeHealth", new GameUpgrade("playerUpgradeHealth", "Health", PunManager.instance.UpdateCrouchRestRightAway) },
-            { "playerUpgradeExtraJump", new GameUpgrade("playerUpgradeExtraJump", "Jump", PunManager.instance.UpdateExtraJumpRightAway) },
-            { "playerUpgradeLaunch", new GameUpgrade("playerUpgradeLaunch", "Launch", PunManager.instance.UpdateTumbleLaunchRightAway) },
-            { "playerUpgradeMapPlayerCount", new GameUpgrade("playerUpgradeMapPlayerCount", "Map Player Count", PunManager.instance.UpdateMapPlayerCountRightAway) },
-            { "playerUpgradeRange", new GameUpgrade("playerUpgradeRange", "Range", PunManager.instance.UpdateGrabRangeRightAway) },
-            { "playerUpgradeSpeed", new GameUpgrade("playerUpgradeSpeed", "Speed", PunManager.instance.UpdateSprintSpeedRightAway) },
-            { "playerUpgradeStamina", new GameUpgrade("playerUpgradeStamina", "Stamina", PunManager.instance.UpdateEnergyRightAway) },
-            { "playerUpgradeStrength", new GameUpgrade("playerUpgradeStrength", "Strength", PunManager.instance.UpdateGrabStrengthRightAway) },
-            { "playerUpgradeThrow", new GameUpgrade("playerUpgradeThrow", "Throw", PunManager.instance.UpdateThrowStrengthRightAway) },
-            { "playerUpgradeTumbleWings", new GameUpgrade("playerUpgradeTumbleWings", "Tumble Wings", PunManager.instance.UpdateTumbleWingsRightAway) },
-            { "playerUpgradeTumbleClimb", new GameUpgrade("playerUpgradeTumbleClimb", "Tumble Climb", PunManager.instance.UpdateTumbleClimbRightAway) },
-            { "playerUpgradeDeathHeadBattery", new GameUpgrade("playerUpgradeDeathHeadBattery", "Death Head Battery", PunManager.instance.UpdateDeathHeadBatteryRightAway) },
+            { "playerUpgradeCrouchRest", new GameUpgrade("playerUpgradeCrouchRest", "Crouch Rest", "UpdateCrouchRestRightAway") },
+            { "playerUpgradeHealth", new GameUpgrade("playerUpgradeHealth", "Health", "UpdateCrouchRestRightAway") },
+            { "playerUpgradeExtraJump", new GameUpgrade("playerUpgradeExtraJump", "Jump", "UpdateExtraJumpRightAway") },
+            { "playerUpgradeLaunch", new GameUpgrade("playerUpgradeLaunch", "Launch", "UpdateTumbleLaunchRightAway") },
+            { "playerUpgradeMapPlayerCount", new GameUpgrade("playerUpgradeMapPlayerCount", "Map Player Count", "UpdateMapPlayerCountRightAway") },
+            { "playerUpgradeRange", new GameUpgrade("playerUpgradeRange", "Range", "UpdateGrabRangeRightAway") },
+            { "playerUpgradeSpeed", new GameUpgrade("playerUpgradeSpeed", "Speed", "UpdateSprintSpeedRightAway") },
+            { "playerUpgradeStamina", new GameUpgrade("playerUpgradeStamina", "Stamina", "UpdateEnergyRightAway") },
+            { "playerUpgradeStrength", new GameUpgrade("playerUpgradeStrength", "Strength", "UpdateGrabStrengthRightAway") },
+            { "playerUpgradeThrow", new GameUpgrade("playerUpgradeThrow", "Throw", "UpdateThrowStrengthRightAway") },
+            { "playerUpgradeTumbleWings", new GameUpgrade("playerUpgradeTumbleWings", "Tumble Wings", "UpdateTumbleWingsRightAway") },
+            { "playerUpgradeTumbleClimb", new GameUpgrade("playerUpgradeTumbleClimb", "Tumble Climb", "UpdateTumbleClimbRightAway") },
+            { "playerUpgradeDeathHeadBattery", new GameUpgrade("playerUpgradeDeathHeadBattery", "Death Head Battery", "UpdateDeathHeadBatteryRightAway") },
         };
+
+        // Reflection helpers for accessing internal/private game fields
+        private static readonly FieldInfo _dictionaryOfDictionariesField =
+            AccessTools.Field(typeof(StatsManager), "dictionaryOfDictionaries");
+
+        private static SortedDictionary<string, Dictionary<string, int>> GetDictOfDicts(StatsManager sm) {
+            return (SortedDictionary<string, Dictionary<string, int>>)_dictionaryOfDictionariesField.GetValue(sm);
+        }
+
+        private static Action<string, int> CreatePunManagerAction(string methodName) {
+            var method = AccessTools.Method(typeof(PunManager), methodName);
+            return (steamId, level) => method.Invoke(PunManager.instance, new object[] { steamId, level });
+        }
 
         public static void Init() {
             modUpgrades.Clear();
@@ -51,8 +66,9 @@ namespace RepoAdminMenu.Utils {
             string playerSteamId = SemiFunc.PlayerGetSteamID(avatar);
 
             if (statsManager != null) {
-                if (statsManager.dictionaryOfDictionaries.ContainsKey(type)) {
-                    Dictionary<string, int> upgradeType = statsManager.dictionaryOfDictionaries[type];
+                var dicts = GetDictOfDicts(statsManager);
+                if (dicts != null && dicts.ContainsKey(type)) {
+                    Dictionary<string, int> upgradeType = dicts[type];
                     if (upgradeType != null && upgradeType.ContainsKey(playerSteamId)) {
                         return upgradeType[playerSteamId];
                     }
@@ -64,16 +80,16 @@ namespace RepoAdminMenu.Utils {
         public static void UpgradeSync(PlayerAvatar avatar, string key, int level) {
             RepoAdminMenu.mls.LogInfo("UpgradeSync: " + SemiFunc.PlayerGetName(avatar) + " - '" + key + "' -> " + level);
             string steamId = SemiFunc.PlayerGetSteamID(avatar);
-            Dictionary<string, Dictionary<string, int>> dicts = StatsManager.instance.dictionaryOfDictionaries;
+            var dicts = GetDictOfDicts(StatsManager.instance);
 
-            if (!dicts.ContainsKey(key)) {
-                dicts.Add(key, new Dictionary<string, int>());
-            }
+            if (dicts != null) {
+                if (!dicts.ContainsKey(key)) {
+                    dicts.Add(key, new Dictionary<string, int>());
+                }
 
-            Dictionary<string, int> dict = new Dictionary<string, int>();
-
-            if (dicts.TryGetValue(key, out dict)) {
-                dict[steamId] = level;
+                if (dicts.TryGetValue(key, out var dict)) {
+                    dict[steamId] = level;
+                }
             }
 
             // process upgrade locally
@@ -96,10 +112,11 @@ namespace RepoAdminMenu.Utils {
             private string name;
             private Action<string, int> punManagerFunction;
 
-            public GameUpgrade(string id, string name, Action<string, int> punManagerFunction) {
+            public GameUpgrade(string id, string name, string punManagerMethodName) {
                 this.id = id;
                 this.name = name;
-                this.punManagerFunction = punManagerFunction;
+                if (!string.IsNullOrEmpty(punManagerMethodName))
+                    this.punManagerFunction = CreatePunManagerAction(punManagerMethodName);
             }
 
             public string GetID() {
@@ -117,7 +134,7 @@ namespace RepoAdminMenu.Utils {
             public void Upgrade(PlayerAvatar avatar, int level) {
                 RepoAdminMenu.mls.LogInfo("Upgrade: " + SemiFunc.PlayerGetName(avatar) + " - '" + id + "' -> " + level);
                 if (SemiFunc.IsMultiplayer()) {
-                    NetworkUtil.SendCommandSteamIDStringInt("UpgradeSync", avatar.steamID, id, level, ReceiverGroup.All);
+                    NetworkUtil.SendCommandSteamIDStringInt("UpgradeSync", SemiFunc.PlayerGetSteamID(avatar), id, level, ReceiverGroup.All);
                 } else {
                     UpgradeSync(avatar, id, level);
                 }

@@ -119,16 +119,16 @@ namespace RepoAdminMenu.Utils {
                 Enemies.SpawnEnemy(enemySetup, position, Quaternion.identity, spawnDespawned: false);
             } else {
                 EnemyParentPatch.spawning = true;
-                LevelGenerator.Instance.EnemiesSpawned = -1;
+                ReflectionUtil.SetFieldValue(LevelGenerator.Instance, "EnemiesSpawned", -1);
                 GameObject obj = UnityEngine.Object.Instantiate(enemySetup.spawnObjects[0].Prefab, position, Quaternion.identity);
                 EnemyParent parent = obj.GetComponent<EnemyParent>();
                 if (parent != null) {
-                    parent.SetupDone = true;
+                    ReflectionUtil.SetFieldValue(parent, "SetupDone", true);
                     obj.GetComponentInChildren<Enemy>().EnemyTeleported(position);
                     EnemyDirector.instance.FirstSpawnPointAdd(parent);
                     EnemyDirector.instance.enemiesSpawned.Add(parent);
                     foreach (PlayerAvatar player in SemiFunc.PlayerGetAll()) {
-                        parent.Enemy.PlayerAdded(player.photonView.ViewID);
+                        ReflectionUtil.GetFieldValue<Enemy>(parent, "Enemy").PlayerAdded(player.photonView.ViewID);
                     }
                 }
             }

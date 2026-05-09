@@ -228,12 +228,12 @@ namespace RepoAdminMenu {
 
             var playerMenu = createMenu("R.A.M. - " + SemiFunc.PlayerGetName(avatar), "player", "playerList");
 
-            addToggle(playerMenu, "God Mode", (b) => { Settings.toggle(Settings.instance.godModePlayers, avatar.steamID, b); }, Settings.isGod(avatar));
-            addToggle(playerMenu, "No Death", (b) => { Settings.toggle(Settings.instance.noDeathPlayers, avatar.steamID, b); }, Settings.isNoDeath(avatar));
-            addToggle(playerMenu, "No Target", (b) => { Settings.toggle(Settings.instance.noTargetPlayers, avatar.steamID, b); }, Settings.isNoTarget(avatar));
-            addToggle(playerMenu, "No Tumble", (b) => { Settings.toggle(Settings.instance.noTumblePlayers, avatar.steamID, b); }, Settings.isNoTumble(avatar));
-            addToggle(playerMenu, "Infinite Stamina", (b) => { Settings.toggle(Settings.instance.infiniteStaminaPlayers, avatar.steamID, b); }, Settings.isInfiniteStamina(avatar));
-            addToggle(playerMenu, "Force Tumble", (b) => { Settings.toggleDictLong(Settings.instance.forcedTumble, avatar.steamID, b); }, Settings.isForceTumble(avatar));
+            addToggle(playerMenu, "God Mode", (b) => { Settings.toggle(Settings.instance.godModePlayers, SemiFunc.PlayerGetSteamID(avatar), b); }, Settings.isGod(avatar));
+            addToggle(playerMenu, "No Death", (b) => { Settings.toggle(Settings.instance.noDeathPlayers, SemiFunc.PlayerGetSteamID(avatar), b); }, Settings.isNoDeath(avatar));
+            addToggle(playerMenu, "No Target", (b) => { Settings.toggle(Settings.instance.noTargetPlayers, SemiFunc.PlayerGetSteamID(avatar), b); }, Settings.isNoTarget(avatar));
+            addToggle(playerMenu, "No Tumble", (b) => { Settings.toggle(Settings.instance.noTumblePlayers, SemiFunc.PlayerGetSteamID(avatar), b); }, Settings.isNoTumble(avatar));
+            addToggle(playerMenu, "Infinite Stamina", (b) => { Settings.toggle(Settings.instance.infiniteStaminaPlayers, SemiFunc.PlayerGetSteamID(avatar), b); }, Settings.isInfiniteStamina(avatar));
+            addToggle(playerMenu, "Force Tumble", (b) => { Settings.toggleDictLong(Settings.instance.forcedTumble, SemiFunc.PlayerGetSteamID(avatar), b); }, Settings.isForceTumble(avatar));
             addButton(playerMenu, "Upgrades", () => { navigate(playerMenu, "playerUpgrade"); });
             addButton(playerMenu, "Heal", () => { PlayerUtil.healPlayer(avatar); });
             addButton(playerMenu, "Kill", () => { PlayerUtil.killPlayer(avatar); });
@@ -425,9 +425,9 @@ namespace RepoAdminMenu {
             foreach (KeyValuePair<string, Level> entry in MapUtil.getMaps()) {
                 addButton(mapMenu, entry.Key, () => { MapUtil.changeLevel(entry.Value); });
             }
-            addButton(mapMenu, "Arena", () => { MapUtil.changeLevel(RunManager.instance.levelArena); });
+            addButton(mapMenu, "Arena", () => { MapUtil.changeLevel(RunManager.instance.levelArena.Count > 0 ? RunManager.instance.levelArena[0] : null); });
             addButton(mapMenu, "Lobby", () => { MapUtil.changeLevel(RunManager.instance.levelLobby); });
-            addButton(mapMenu, "Shop", () => { MapUtil.changeLevel(RunManager.instance.levelShop); });
+            addButton(mapMenu, "Shop", () => { MapUtil.changeLevel(RunManager.instance.levelShop.Count > 0 ? RunManager.instance.levelShop[0] : null); });
 
             openPage(mapMenu, "levelSelector");
         }
