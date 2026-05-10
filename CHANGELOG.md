@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.16](https://github.com/proferabg/RepoAdminMenu/releases/tag/1.0.16)
+
+* Updated for R.E.P.O. v0.4.0/v0.4.1
+
 ## [1.0.15](https://github.com/proferabg/RepoAdminMenu/releases/tag/1.0.15)
 
 * Fix upgrades not working in single-player

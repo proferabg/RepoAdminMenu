@@ -64,7 +64,7 @@ namespace RepoAdminMenu.Utils {
         public static void UpgradeSync(PlayerAvatar avatar, string key, int level) {
             RepoAdminMenu.mls.LogInfo("UpgradeSync: " + SemiFunc.PlayerGetName(avatar) + " - '" + key + "' -> " + level);
             string steamId = SemiFunc.PlayerGetSteamID(avatar);
-            Dictionary<string, Dictionary<string, int>> dicts = StatsManager.instance.dictionaryOfDictionaries;
+            SortedDictionary<string, Dictionary<string, int>> dicts = StatsManager.instance.dictionaryOfDictionaries;
 
             if (!dicts.ContainsKey(key)) {
                 dicts.Add(key, new Dictionary<string, int>());

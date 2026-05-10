@@ -425,9 +425,16 @@ namespace RepoAdminMenu {
             foreach (KeyValuePair<string, Level> entry in MapUtil.getMaps()) {
                 addButton(mapMenu, entry.Key, () => { MapUtil.changeLevel(entry.Value); });
             }
-            addButton(mapMenu, "Arena", () => { MapUtil.changeLevel(RunManager.instance.levelArena); });
+
+            foreach (KeyValuePair<string, Level> entry in MapUtil.getArenas()) {
+                addButton(mapMenu, entry.Key, () => { MapUtil.changeLevel(entry.Value); });
+            }
+
             addButton(mapMenu, "Lobby", () => { MapUtil.changeLevel(RunManager.instance.levelLobby); });
-            addButton(mapMenu, "Shop", () => { MapUtil.changeLevel(RunManager.instance.levelShop); });
+
+            foreach (KeyValuePair<string, Level> entry in MapUtil.getShops()) {
+                addButton(mapMenu, entry.Key, () => { MapUtil.changeLevel(entry.Value); });
+            }
 
             openPage(mapMenu, "levelSelector");
         }

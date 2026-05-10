@@ -4,6 +4,8 @@ namespace RepoAdminMenu.Utils {
     internal class MapUtil {
 
         private static SortedDictionary<string, Level> maps = new SortedDictionary<string, Level>();
+        private static SortedDictionary<string, Level> arenas = new SortedDictionary<string, Level>();
+        private static SortedDictionary<string, Level> shops = new SortedDictionary<string, Level>();
         private static Dictionary<Level, bool> mapToggles = new Dictionary<Level, bool>();
 
         private static Level nextLevel = null;
@@ -17,10 +19,26 @@ namespace RepoAdminMenu.Utils {
                 maps.Add(level.name.Replace("Level - ", string.Empty), level);
                 mapToggles.Add(level, true);
             }
+
+            foreach (Level level in RunManager.instance.levelArena) {
+                arenas.Add(level.name.Replace("Level - ", string.Empty), level);
+            }
+
+            foreach (Level level in RunManager.instance.levelShop) {
+                shops.Add(level.name.Replace("Level - ", string.Empty), level);
+            }
         }
 
         public static SortedDictionary<string, Level> getMaps() {
             return maps;
+        }
+
+        public static SortedDictionary<string, Level> getArenas() {
+            return arenas;
+        }
+
+        public static SortedDictionary<string, Level> getShops() {
+            return shops;
         }
 
         public static Dictionary<Level, bool> getMapToggles() {
