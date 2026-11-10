@@ -1,0 +1,60 @@
+name: Feature request
+description: Suggest an improvement or new capability for RepoAdminMenu
+title: "[FEAT] "
+labels:
+  - feature
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting an improvement to RepoAdminMenu.
+
+        Explain the intended behavior and why it would be useful.
+
+  - type: textarea
+    id: feature_description
+    attributes:
+      label: What should the feature do?
+      description: Describe exactly how the proposed feature should work.
+      placeholder: Describe the feature and its behavior.
+    validations:
+      required: true
+
+  - type: textarea
+    id: feature_target
+    attributes:
+      label: What should the feature target?
+      description: Does it target a specific player, enemy, item, valuable, menu, or game system?
+      placeholder: Identify the target and explain how it is affected.
+    validations:
+      required: true
+
+  - type: textarea
+    id: feature_reason
+    attributes:
+      label: Why should this feature be added?
+      description: Explain the problem it solves or how it improves RepoAdminMenu.
+      placeholder: Describe the use case and benefits.
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional context
+      description: Add mockups, screenshots, links, or other supporting information.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: submission_checks
+    attributes:
+      label: Submission checklist
+      options:
+        - label: I searched the existing issues and did not find this request.
+          required: true
+        - label: This request is specifically related to RepoAdminMenu.
+          required: true
+

@@ -1,0 +1,108 @@
+name: Bug report
+description: Report a reproducible problem with RepoAdminMenu
+title: "[BUG] "
+labels:
+  - bug
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a problem with RepoAdminMenu.
+
+        Complete every required field. Reports without a full client log may be closed.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the bug
+      description: Clearly and concisely describe what went wrong.
+      placeholder: Tell us what happened.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: game_mode
+    attributes:
+      label: Game mode
+      description: Where does the problem occur?
+      options:
+        - Single-player
+        - Multi-player
+        - Both
+        - Unknown or not applicable
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction_steps
+    attributes:
+      label: Steps to reproduce
+      description: Provide the exact steps needed to reproduce the problem.
+      placeholder: |
+        1. Start R.E.P.O. with...
+        2. Open RepoAdminMenu and...
+        3. Select...
+        4. Observe...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: Expected behavior
+      description: Explain what you expected to happen instead.
+      placeholder: Describe the expected result.
+    validations:
+      required: true
+
+  - type: textarea
+    id: client_log
+    attributes:
+      label: Full client log
+      description: Upload the log directly, or provide a LogPaste, Pastebin, or MCLogs link. Remove passwords, tokens, and other sensitive information.
+      placeholder: Drag and drop the log file here, or paste a link to the complete log.
+    validations:
+      required: true
+
+  - type: textarea
+    id: installed_mods
+    attributes:
+      label: Installed mods
+      description: List every installed mod and its version. Write "None" if no other mods are installed.
+      placeholder: |
+        - BepInEx-BepInExPack: version
+        - nickklmao-MenuLib: version
+        - Zeus-REPOLib: version
+        - proferabg-RepoAdminMenu: version
+        - Other mod: version
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots or video
+      description: If helpful, drag and drop screenshots or video showing the problem.
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional context
+      description: Add anything else that may help diagnose the problem.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: submission_checks
+    attributes:
+      label: Submission checklist
+      options:
+        - label: I searched the existing issues for this problem.
+          required: true
+        - label: I attached or linked the complete client log and removed sensitive information.
+          required: true
+
