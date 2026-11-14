@@ -46,7 +46,7 @@ namespace RepoAdminMenu.Utils {
             teleport(avatar, TruckSafetySpawnPoint.instance.transform.position, TruckSafetySpawnPoint.instance.transform.rotation);
         }
 
-        private static void teleport(PlayerAvatar from, PlayerAvatar to) {
+        public static void teleport(PlayerAvatar from, PlayerAvatar to) {
             UnityEngine.Vector3 pos = to.transform.position;
             UnityEngine.Quaternion rot = to.transform.rotation;
             if (to.deadSet) {
@@ -57,14 +57,10 @@ namespace RepoAdminMenu.Utils {
         }
 
         private static void teleport(PlayerAvatar from, UnityEngine.Vector3 pos, UnityEngine.Quaternion rot) {
-            if (!SemiFunc.IsMultiplayer()) {
+            if (from.deadSet) {
+                from.playerDeathHead.physGrabObject.Teleport(pos, rot);
+            } else {
                 from.Spawn(pos, rot);
-            } else if (from.photonView != null) {
-                if (from.deadSet) {
-                    from.playerDeathHead.physGrabObject.Teleport(pos, rot);
-                } else {
-                    from.photonView.RPC("SpawnRPC", RpcTarget.All, new object[] { pos, rot });
-                }
             }
         }
 
@@ -74,10 +70,15 @@ namespace RepoAdminMenu.Utils {
                 return;
             }
 
-            //avatar.photonView.RPC("OutroStartRPC", RpcTarget.All, new object[] { });
-            RepoAdminMenu.mls.LogInfo("Sending kick to: " + SemiFunc.PlayerGetName(avatar));
-            //NetworkUtil.SendCommandSteamIDString("KickPlayer", avatar.steamID, "", ReceiverGroup.Others);
-            NetworkManager.instance.KickPlayer(avatar);
+            string name = SemiFunc.PlayerGetName(avatar);
+
+            if (avatar.photonView == null || avatar.photonView.Owner == null) {
+                RepoAdminMenu.mls.LogInfo("Photon Player is null for: " + name);
+                return;
+            }
+
+            RepoAdminMenu.mls.LogInfo("Sending kick to: " + name);
+            NetworkManager.instance.KickPlayer(avatar.photonView.Owner);
         }
 
         public static void BanPlayer(PlayerAvatar avatar) {
@@ -86,10 +87,15 @@ namespace RepoAdminMenu.Utils {
                 return;
             }
 
-            //avatar.photonView.RPC("OutroStartRPC", RpcTarget.All, new object[] { });
+            string name = SemiFunc.PlayerGetName(avatar);
+
+            if (avatar.photonView == null || avatar.photonView.Owner == null) {
+                RepoAdminMenu.mls.LogInfo("Photon Player is null for: " + name);
+                return;
+            }
+
             RepoAdminMenu.mls.LogInfo("Sending ban to: " + SemiFunc.PlayerGetName(avatar));
-            //NetworkUtil.SendCommandSteamIDString("KickPlayer", avatar.steamID, "", ReceiverGroup.Others);
-            NetworkManager.instance.BanPlayer(avatar);
+            NetworkManager.instance.BanPlayer(avatar.photonView.Owner);
         }
     }
 }

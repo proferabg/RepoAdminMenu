@@ -99,15 +99,26 @@ namespace RepoAdminMenu.Utils {
 
         public static void spawnValuable(PrefabRef valuable) {
             Vector3 position = PlayerAvatar.instance.transform.position + new Vector3(0f, 1f, 0f) + PlayerAvatar.instance.transform.forward * 1f;
-            if (SemiFunc.IsMultiplayer()) {
-                if (!valuable.Prefab.TryGetComponent(out ValuableObject valuableObject)) {
-                    ItemInfoExtraUI.instance.ItemInfoText($"Could not spawn valuable '" + valuable.PrefabName + "'", Color.red);
-                    return;
+            int spawned = 0;
+
+            for (int i = 0; i < Settings.instance.spawnerCount; i++) {
+                GameObject result;
+
+                if (SemiFunc.IsMultiplayer()) {
+                    if (!valuable.Prefab.TryGetComponent(out ValuableObject valuableObject)) {
+                        ItemInfoExtraUI.instance.ItemInfoText(LanguageUtil.Format("message.valuable_not_spawned", "Could not spawn valuable '{0}'", valuable.PrefabName), Color.red);
+                        return;
+                    }
+                    result = Valuables.SpawnValuable(valuable, position, Quaternion.identity);
+                } else {
+                    result = UnityEngine.Object.Instantiate(valuable.Prefab, position, Quaternion.identity);
                 }
-                Valuables.SpawnValuable(valuable, position, Quaternion.identity);
-            } else {
-                UnityEngine.Object.Instantiate(valuable.Prefab, position, Quaternion.identity);
+
+                if (result != null) {
+                    spawned++;
+                }
             }
+            MissionUI.instance.MissionText(LanguageUtil.Format("message.object_spawned", "Spawned {0} '{1}'.", spawned, valuable.PrefabName), Color.black, Color.black, 3f);
         }
     }
 }

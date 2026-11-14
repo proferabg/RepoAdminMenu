@@ -1,5 +1,6 @@
 ﻿using RepoAdminMenu.Patches;
 using REPOLib.Modules;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +8,7 @@ using UnityEngine;
 namespace RepoAdminMenu.Utils {
     internal class EnemyUtil {
 
-        private static readonly Dictionary<string, string> enemyDictionary = new Dictionary<string, string> {
+        private static readonly Dictionary<string, string> enemyDictionary = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase) {
                 { "Animal", "Animal" },
                 { "Bang", "Bang" },
                 { "Beamer", "Clown" },
@@ -28,6 +29,7 @@ namespace RepoAdminMenu.Utils {
                 { "Robe", "Robe" },
                 { "Runner", "Reaper" },
                 { "Shadow", "Loom" },
+                { "Snatcher", "Pony" },
                 { "Slow Mouth", "Spewer" },
                 { "Slow Walker", "Trudge" },
                 { "Spinny", "Gambit" },
@@ -97,18 +99,20 @@ namespace RepoAdminMenu.Utils {
 
         public static void spawnEnemy(string enemy) {
             if (EnemyParentPatch.spawning) {
-                MissionUI.instance.MissionText($"Already spawning enemy '" + enemy + "'!", Color.red, Color.red, 3f);
+                MissionUI.instance.MissionText(LanguageUtil.Format("message.enemy_already_spawning", "Already spawning enemy '{0}'!", enemy), Color.red, Color.red, 3f);
             } else {
                 EnemySetup enemySetup = getEnemySetup(enemy);
                 if (enemySetup != null) {
-                    Vector3 position = PlayerAvatar.instance.transform.position;
-                    EnemyDirector.instance.StartCoroutine(SpawnEnemy(enemySetup, position));
-                    if (Configuration.CloseMenuOnSpawning.Value) {
-                        Menu.toggleMenu();
+                    for (int i = 0; i < Settings.instance.spawnerCount; i++) {
+                        Vector3 position = PlayerAvatar.instance.transform.position;
+                        EnemyDirector.instance.StartCoroutine(SpawnEnemy(enemySetup, position));
+                        if (Configuration.CloseMenuOnSpawning.Value) {
+                            Menu.toggleMenu();
+                        }
                     }
-                    MissionUI.instance.MissionText($"Spawning '{enemy}'. Run...!", Color.red, Color.red, 3f);
+                    MissionUI.instance.MissionText(LanguageUtil.Format("message.enemy_spawning", "Spawning {0} '{1}'. Run...!", Settings.instance.spawnerCount, enemy), Color.red, Color.red, 3f);
                 } else {
-                    MissionUI.instance.MissionText($"Could not find enemy named '" + enemy + "'", Color.red, Color.red, 3f);
+                    MissionUI.instance.MissionText(LanguageUtil.Format("message.enemy_not_found", "Could not find enemy named '{0}'", enemy), Color.red, Color.red, 3f);
                 }
             }
         }

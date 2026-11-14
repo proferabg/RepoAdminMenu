@@ -15,6 +15,7 @@ namespace RepoAdminMenu {
         public static ConfigEntry<bool> ResetSettingsOnLobbyCreation { get; private set; }
 
         public static ConfigEntry<bool> CloseMenuOnSpawning { get; private set; }
+        public static ConfigEntry<int> MaxSpawnCount { get; private set; }
 
         public static void Init(ConfigFile config) {
             EnableCommands = config.Bind<bool>(
@@ -57,6 +58,13 @@ namespace RepoAdminMenu {
                 "CloseMenuOnSpawning",
                 true,
                 "Should the menu close when spawning an enemy"
+            );
+
+            MaxSpawnCount = config.Bind<int>(
+                "General",
+                "MaxSpawnCount",
+                10,
+                "Changes the slider max value for how many objects to spawn at one time"
             );
 
         }

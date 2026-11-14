@@ -11,7 +11,7 @@ namespace RepoAdminMenu.Utils {
         private static SortedDictionary<string, PlayerUpgrade> modUpgrades = new SortedDictionary<string, PlayerUpgrade>();
         private static SortedDictionary<string, GameUpgrade> gameUpgrades = new SortedDictionary<string, GameUpgrade>() {
             { "playerUpgradeCrouchRest", new GameUpgrade("playerUpgradeCrouchRest", "Crouch Rest", PunManager.instance.UpdateCrouchRestRightAway) },
-            { "playerUpgradeHealth", new GameUpgrade("playerUpgradeHealth", "Health", PunManager.instance.UpdateCrouchRestRightAway) },
+            { "playerUpgradeHealth", new GameUpgrade("playerUpgradeHealth", "Health", PunManager.instance.UpdateHealthRightAway) },
             { "playerUpgradeExtraJump", new GameUpgrade("playerUpgradeExtraJump", "Jump", PunManager.instance.UpdateExtraJumpRightAway) },
             { "playerUpgradeLaunch", new GameUpgrade("playerUpgradeLaunch", "Launch", PunManager.instance.UpdateTumbleLaunchRightAway) },
             { "playerUpgradeMapPlayerCount", new GameUpgrade("playerUpgradeMapPlayerCount", "Map Player Count", PunManager.instance.UpdateMapPlayerCountRightAway) },
@@ -124,10 +124,11 @@ namespace RepoAdminMenu.Utils {
             }
 
             public void PunUpgrade(PlayerAvatar avatar, int level) {
-                if (punManagerFunction != null) {
-                    string steamId = SemiFunc.PlayerGetSteamID(avatar);
-                    punManagerFunction.Invoke(steamId, level);
-                 }
+                if (punManagerFunction == null) {
+                    RepoAdminMenu.mls.LogInfo("PunManagerFunction '" + id + "' is null");
+                }
+                string steamId = SemiFunc.PlayerGetSteamID(avatar);
+                punManagerFunction.Invoke(steamId, level);
 
             }
 

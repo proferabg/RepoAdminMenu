@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.0.17](https://github.com/proferabg/RepoAdminMenu/releases/tag/1.0.17)
+
+* Update for R.E.P.O. v0.5.0/v0.5.1
+* Updated dependencies
+* Update bug report url and templates
+* Fixed health upgrade logic
+* Fixed error message in log/console
+* Add better no target patcher
+* Add player to player teleporting
+* Add cosmetic box spawning
+* Add option for amount to spawn
+* Add freeze enemy AI option
+* Add disable shopkeeper option
+* Add language translations (AI Generated, Needs Reviewed)
+
 ## [1.0.16](https://github.com/proferabg/RepoAdminMenu/releases/tag/1.0.16)
 
 * Updated for R.E.P.O. v0.4.0/v0.4.1

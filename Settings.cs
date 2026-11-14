@@ -26,9 +26,13 @@ namespace RepoAdminMenu {
             weakEnemies = false,
             deafEnemies = false,
             blindEnemies = false,
+            freezeEnemyAI = false,
             boomhammer = false,
             friendlyDuck = false,
+            disableShopKeeper = false,
             useShopUpgrades = false;
+
+        public int spawnerCount = 1;
 
 
         public List<string> godModePlayers = new List<string>(),
@@ -112,6 +116,7 @@ namespace RepoAdminMenu {
         internal void log() {
             RepoAdminMenu.mls.LogInfo("\n\n\n" + instance.toJson() + "\n\n\n");
             RepoAdminMenu.mls.LogInfo("Current Settings:\n" +
+                "  spawnerCount - " + instance.spawnerCount + "\n" +
                 "  infiniteMoney - " + instance.infiniteMoney + "\n" +
                 "  noBreak - " + instance.noBreak + "\n" +
                 "  noBatteryDrain - " + instance.noBatteryDrain + "\n" +
@@ -119,8 +124,10 @@ namespace RepoAdminMenu {
                 "  weakEnemies - " + instance.weakEnemies + "\n" +
                 "  deafEnemies - " + instance.deafEnemies + "\n" +
                 "  blindEnemies - " + instance.blindEnemies + "\n" +
+                "  freezeEnemyAI - " + instance.freezeEnemyAI + "\n" +
                 "  boomhammer - " + instance.boomhammer + "\n" +
                 "  friendlyDuck - " + instance.friendlyDuck + "\n" +
+                "  disableShopKeeper - " + instance.disableShopKeeper + "\n" +
                 "  useShopUpgrades - " + instance.useShopUpgrades + "\n" +
                 "  godMode: - " + string.Join(",", instance.godModePlayers.Select(player => SemiFunc.PlayerGetName(SemiFunc.PlayerGetFromSteamID(player)))) + "\n" +
                 "  noDeathPlayers: - " + string.Join(",", instance.noDeathPlayers.Select(player => SemiFunc.PlayerGetName(SemiFunc.PlayerGetFromSteamID(player)))) + "\n" +

@@ -23,16 +23,27 @@ namespace RepoAdminMenu.Utils {
 
         public static void spawnItem(Item item) {
             Vector3 position = PlayerAvatar.instance.transform.position + new Vector3(0f, 1f, 0f) + PlayerAvatar.instance.transform.forward * 1f;
-            GameObject spawnedObject;
-            if (SemiFunc.IsMultiplayer()) {
-                spawnedObject = Items.SpawnItem(item, position, Quaternion.identity);
-            } else {
-                spawnedObject = Object.Instantiate(item.prefab.Prefab, position, Quaternion.identity);
+            int spawned = 0;
+            
+            for (int i = 0; i < Settings.instance.spawnerCount; i++) {
+                GameObject spawnedObject;
+                if (SemiFunc.IsMultiplayer()) {
+                    spawnedObject = Items.SpawnItem(item, position, Quaternion.identity);
+                } else {
+                    spawnedObject = Object.Instantiate(item.prefab.Prefab, position, Quaternion.identity);
+                }
+                
+                if(spawnedObject != null) {
+                    spawned++;
+
+                    ItemBattery itemBattery = spawnedObject.GetComponentInParent<ItemBattery>();
+                    if (itemBattery && itemBattery.batteryBars < 6) {
+                        itemBattery.SetBatteryLife(100);
+                    }
+                }
             }
-            ItemBattery itemBattery = spawnedObject.GetComponentInParent<ItemBattery>();
-            if (itemBattery && itemBattery.batteryBars < 6) {
-                itemBattery.SetBatteryLife(100);
-            }
+
+            MissionUI.instance.MissionText(LanguageUtil.Format("message.object_spawned", "Spawned {0} '{1}'.", spawned, item.name), Color.black, Color.black, 3f);
         }
     }
 }

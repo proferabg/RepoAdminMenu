@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using UnityEngine;
 
 namespace RepoAdminMenu.Patches {
 
@@ -8,12 +7,18 @@ namespace RepoAdminMenu.Patches {
 
         [HarmonyPatch(nameof(PunManager.UpdateHealthRightAway))]
         [HarmonyPrefix]
-        private static bool Prefix_UpdateHealthRightAway(ref string _steamID) {
+        private static bool Prefix_UpdateHealthRightAway(ref string _steamID, int value) {
             PlayerAvatar playerAvatar = SemiFunc.PlayerAvatarGetFromSteamID(_steamID);
             if (playerAvatar == SemiFunc.PlayerAvatarLocal()) {
                 playerAvatar.playerHealth.maxHealth = 100 + (StatsManager.instance.playerUpgradeHealth[_steamID] * 20);
-                playerAvatar.playerHealth.health = playerAvatar.playerHealth.maxHealth - 1;
-                playerAvatar.playerHealth.Heal(1, false);
+                if (playerAvatar.playerHealth.health > playerAvatar.playerHealth.maxHealth) {
+                    playerAvatar.playerHealth.health = playerAvatar.playerHealth.maxHealth - 1;
+                    playerAvatar.playerHealth.Heal(1, effect: false);
+                } else if (value >= 0) {
+                    playerAvatar.playerHealth.Heal(20 * value, effect: false);
+                } else {
+                    playerAvatar.playerHealth.Hurt(20 * -value, savingGrace: false);
+                }
             }
             return false;
         }
